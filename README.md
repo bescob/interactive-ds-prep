@@ -5,8 +5,8 @@ Interactive study tool for data science interview prep. 14 modules covering SQL,
 ## quick start
 
 ```bash
-git clone https://github.com/bescob/ds-interview-prep.git
-cd ds-interview-prep
+git clone https://github.com/bescob/interactive-ds-prep.git
+cd interactive-ds-prep
 pip install -r requirements.txt
 python scripts/ingest_all.py
 python run.py
