@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: interactive-ds-prep
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python scripts/ingest_all.py
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
