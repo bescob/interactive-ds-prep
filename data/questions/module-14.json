@@ -1,0 +1,322 @@
+[
+  {
+    "id": "13266d47",
+    "module_id": "module-14",
+    "section_title": "Round 1: Speed Definitions (30 seconds each)",
+    "category": "terminology",
+    "question_type": "flashcard",
+    "prompt": "What does ETL stand for?",
+    "answer": "Extract, Transform, Load.",
+    "source": "auto"
+  },
+  {
+    "id": "c42e5cde",
+    "module_id": "module-14",
+    "section_title": "Round 1: Speed Definitions (30 seconds each)",
+    "category": "terminology",
+    "question_type": "flashcard",
+    "prompt": "OLAP vs OLTP in one sentence each?",
+    "answer": "OLTP: fast individual transactions (app backend). OLAP: complex analytical queries across millions of rows (BI/dashboards).",
+    "source": "auto"
+  },
+  {
+    "id": "2e550955",
+    "module_id": "module-14",
+    "section_title": "Round 1: Speed Definitions (30 seconds each)",
+    "category": "terminology",
+    "question_type": "flashcard",
+    "prompt": "What is the CAP theorem?",
+    "answer": "Distributed systems can guarantee at most 2 of 3: Consistency, Availability, Partition tolerance. Since partitions happen, you choose CP or AP.",
+    "source": "auto"
+  },
+  {
+    "id": "a992887b",
+    "module_id": "module-14",
+    "section_title": "Round 1: Speed Definitions (30 seconds each)",
+    "category": "terminology",
+    "question_type": "flashcard",
+    "prompt": "Batch vs streaming?",
+    "answer": "Batch: process data on a schedule (reports, ETL). Streaming: process in real-time as it arrives (fraud, live dashboards).",
+    "source": "auto"
+  },
+  {
+    "id": "cbcc58fc",
+    "module_id": "module-14",
+    "section_title": "Round 1: Speed Definitions (30 seconds each)",
+    "category": "terminology",
+    "question_type": "flashcard",
+    "prompt": "What is a feature store?",
+    "answer": "Centralized system for storing/serving ML features, ensuring consistency between training and production.",
+    "source": "auto"
+  },
+  {
+    "id": "2f45f529",
+    "module_id": "module-14",
+    "section_title": "Round 2: SQL (Write the Query)",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Top 3 highest-spending customers. Just write it.",
+    "answer": "SELECT customer_id, SUM(amount) AS total_spend\nFROM orders\nGROUP BY customer_id\nORDER BY total_spend DESC\nLIMIT 3;",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "9297d1be",
+    "module_id": "module-14",
+    "section_title": "Round 2: SQL (Write the Query)",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Second highest salary per department.",
+    "answer": "WITH ranked AS (\n  SELECT department, employee, salary,\n    DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk\n  FROM employees\n)\nSELECT * FROM ranked WHERE rnk = 2;",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "cb6d8667",
+    "module_id": "module-14",
+    "section_title": "Round 2: SQL (Write the Query)",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Month-over-month growth rate.",
+    "answer": "WITH monthly AS (\n  SELECT DATE_TRUNC('month', order_date) AS month, SUM(revenue) AS rev\n  FROM orders GROUP BY 1\n)\nSELECT month, rev,\n  ROUND(100.0 * (rev - LAG(rev) OVER (ORDER BY month))\n    / NULLIF(LAG(rev) OVER (ORDER BY month), 0), 2) AS growth_pct\nFROM monthly;",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "7c44039a",
+    "module_id": "module-14",
+    "section_title": "Round 2: SQL (Write the Query)",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Users who exist in signups but never made a purchase.",
+    "answer": "SELECT s.user_id\nFROM signups s\nLEFT JOIN purchases p ON s.user_id = p.user_id\nWHERE p.user_id IS NULL;",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "283b31ef",
+    "module_id": "module-14",
+    "section_title": "Round 2: SQL (Write the Query)",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Click-through rate: clicks / impressions per campaign.",
+    "answer": "SELECT campaign_id,\n  ROUND(100.0 *\n    SUM(CASE WHEN event = 'click' THEN 1 ELSE 0 END) /\n    NULLIF(SUM(CASE WHEN event = 'impression' THEN 1 ELSE 0 END), 0)\n  , 2) AS ctr\nFROM events GROUP BY campaign_id;",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "cdb87d7d",
+    "module_id": "module-14",
+    "section_title": "Round 3: Stats & Probability (Explain It)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "State Bayes' theorem and work through: 1% disease rate, 95% sensitivity, 3% false positive. Person tests positive.",
+    "answer": "P(D|+) = (0.95 × 0.01) / (0.95 × 0.01 + 0.03 × 0.99) = 0.0095 / (0.0095 + 0.0297) = 0.0095 / 0.0392 ≈ **24.2%**",
+    "source": "auto"
+  },
+  {
+    "id": "0ead5c5c",
+    "module_id": "module-14",
+    "section_title": "Round 3: Stats & Probability (Explain It)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "What does p = 0.04 mean?",
+    "answer": "If H₀ were true (no effect), there's only a 4% chance of observing data this extreme. At α=0.05, we reject H₀.",
+    "source": "auto"
+  },
+  {
+    "id": "8387575d",
+    "module_id": "module-14",
+    "section_title": "Round 3: Stats & Probability (Explain It)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Type I vs Type II?",
+    "answer": "Type I (α) = false positive, crying wolf. Type II (β) = false negative, missing the wolf. Power = 1-β ≥ 0.80.",
+    "source": "auto"
+  },
+  {
+    "id": "50ff7fe4",
+    "module_id": "module-14",
+    "section_title": "Round 3: Stats & Probability (Explain It)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Why always switch in Monty Hall?",
+    "answer": "Initial pick = 1/3. Other two doors = 2/3. Host reveals one is wrong, remaining door gets the full 2/3. Switching = 2/3 win rate.",
+    "source": "auto"
+  },
+  {
+    "id": "ee2baf6d",
+    "module_id": "module-14",
+    "section_title": "Round 3: Stats & Probability (Explain It)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "95% confidence interval: what does it ACTUALLY mean?",
+    "answer": "If you repeated the experiment 100 times, ~95 of the intervals would contain the true value. NOT \"95% probability the true value is in this specific interval.\"",
+    "source": "auto"
+  },
+  {
+    "id": "8e53afef",
+    "module_id": "module-14",
+    "section_title": "Round 4: ML (Explain the Tradeoff)",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "Bias-variance: your model has 97% train accuracy, 68% test accuracy.",
+    "answer": "Overfitting (high variance). Big gap. Fix: more data, regularize, simplify, dropout.",
+    "source": "auto"
+  },
+  {
+    "id": "ad92f0a6",
+    "module_id": "module-14",
+    "section_title": "Round 4: ML (Explain the Tradeoff)",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "L1 vs L2: 300 features, you think ~20 matter.",
+    "answer": "L1 (Lasso) — drives irrelevant features to exactly zero. Built-in feature selection.",
+    "source": "auto"
+  },
+  {
+    "id": "3645edcb",
+    "module_id": "module-14",
+    "section_title": "Round 4: ML (Explain the Tradeoff)",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "RF vs XGBoost: you have noisy data and 1 hour before deadline.",
+    "answer": "Random Forest — good defaults, resistant to noise, hard to screw up. XGBoost needs tuning.",
+    "source": "auto"
+  },
+  {
+    "id": "7da0a484",
+    "module_id": "module-14",
+    "section_title": "Round 4: ML (Explain the Tradeoff)",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "You built a fraud model with 99.5% accuracy. Your manager is impressed. Should you be?",
+    "answer": "No — if fraud is 0.5% of transactions, predicting \"not fraud\" always = 99.5% accuracy. Check precision, recall, F1, PR-AUC.",
+    "source": "auto"
+  },
+  {
+    "id": "d5ad9486",
+    "module_id": "module-14",
+    "section_title": "Round 4: ML (Explain the Tradeoff)",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "Can you apply L1/L2 to Random Forest?",
+    "answer": "No. L1/L2 regularize coefficients. Trees have none. Trees regularize via max_depth, min_samples_leaf, etc.",
+    "source": "auto"
+  },
+  {
+    "id": "79fc4735",
+    "module_id": "module-14",
+    "section_title": "Round 5: Python/Pandas (What's Wrong?)",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "What's wrong with:",
+    "answer": "Chained indexing — may modify a copy. Fix: `df.loc[df['x'] > 5, 'y'] = 10`",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "77d7d3cd",
+    "module_id": "module-14",
+    "section_title": "Round 5: Python/Pandas (What's Wrong?)",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "You need each employee's department average as a new column.",
+    "answer": "`transform()` — keeps the same number of rows.",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "2f41cf95",
+    "module_id": "module-14",
+    "section_title": "Round 5: Python/Pandas (What's Wrong?)",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "`df.loc[0:3]` returns how many rows?",
+    "answer": "4 rows (labels 0, 1, 2, 3 — loc is inclusive on both ends).",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "2ba9cc91",
+    "module_id": "module-14",
+    "section_title": "Round 5: Python/Pandas (What's Wrong?)",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "Why is NumPy faster than Python lists?",
+    "answer": "Contiguous memory (cache-friendly), homogeneous types (no per-element type checking), vectorized C operations (no Python loop overhead). 10-100x faster.",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "daf50440",
+    "module_id": "module-14",
+    "section_title": "Round 5: Python/Pandas (What's Wrong?)",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "List vs generator for 10M items?",
+    "answer": "Generator — O(1) memory (yields one at a time) vs O(n) memory for list (stores all at once).",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "c6e40c21",
+    "module_id": "module-14",
+    "section_title": "Round 6: Product Sense (Structure Your Answer)",
+    "category": "product",
+    "question_type": "free_text",
+    "prompt": "\"How would you measure success of a search feature?\" Use GAME.",
+    "answer": "- G: Reduce time to find what users want, increase actions from search\n- A: Type query → see results → click result → complete action\n- M: Primary — search-to-action conversion. Secondary — zero-result rate, avg result position clicked. Guardrail — page load time, user satisfaction\n- E: High clicks but low conversions = results look relevant but aren't. Track post-click behavior.",
+    "source": "auto"
+  },
+  {
+    "id": "073d29e4",
+    "module_id": "module-14",
+    "section_title": "Round 6: Product Sense (Structure Your Answer)",
+    "category": "product",
+    "question_type": "free_text",
+    "prompt": "\"Revenue dropped 15% this quarter.\" First 3 things you do.",
+    "answer": "(1) Clarify: vs last quarter or YoY? All segments? (2) Decompose: Revenue = Users × Conversion × AOV — which dropped? (3) Check internal (deployments, bugs, logging changes) before external (seasonality, competitors).",
+    "source": "auto"
+  },
+  {
+    "id": "b85ebd27",
+    "module_id": "module-14",
+    "section_title": "Round 6: Product Sense (Structure Your Answer)",
+    "category": "product",
+    "question_type": "free_text",
+    "prompt": "Estimate: How many data scientists work in Chicago?",
+    "answer": "~5,000 companies with 500+ employees in Chicago. Maybe 30% have DS teams averaging ~5 DS each. 1,500 × 5 = ~7,500. Plus smaller companies and consultancies → maybe ~10-12K. (Rough but defensible.)",
+    "source": "auto"
+  },
+  {
+    "id": "deb6b5ff",
+    "module_id": "module-14",
+    "section_title": "Round 7: Behavioral (Say These Out Loud)",
+    "category": "behavioral",
+    "question_type": "star_practice",
+    "prompt": "\"Tell me about a time you used data to influence a decision.\"",
+    "answer": "*Use your prepared STAR story. Time yourself.*",
+    "source": "auto"
+  },
+  {
+    "id": "aa2b3a5f",
+    "module_id": "module-14",
+    "section_title": "Round 7: Behavioral (Say These Out Loud)",
+    "category": "behavioral",
+    "question_type": "star_practice",
+    "prompt": "\"Describe a failed project.\"",
+    "answer": "*Own it. Show learning. End on what you do differently now.*",
+    "source": "auto"
+  },
+  {
+    "id": "92ddb6b2",
+    "module_id": "module-14",
+    "section_title": "Round 7: Behavioral (Say These Out Loud)",
+    "category": "behavioral",
+    "question_type": "star_practice",
+    "prompt": "\"How do you explain a model to a non-technical stakeholder?\"",
+    "answer": "*Focus on: no jargon, use visualization/analogy, tie to business outcome.*",
+    "source": "auto"
+  }
+]

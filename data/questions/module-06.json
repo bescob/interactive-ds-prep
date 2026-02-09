@@ -1,0 +1,124 @@
+[
+  {
+    "id": "6967d9ae",
+    "module_id": "module-06",
+    "section_title": "🟠 ML: L1 (Lasso) vs L2 (Ridge) Regularization",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "You have 500 features but suspect only ~20 matter. L1 or L2?",
+    "answer": "L1 (Lasso) — it will zero out the ~480 irrelevant features, effectively doing feature selection.",
+    "source": "auto"
+  },
+  {
+    "id": "86e6d039",
+    "module_id": "module-06",
+    "section_title": "🟠 ML: Classification Metrics — When to Use What",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "You're building a fraud detection system. What metric do you prioritize and why?",
+    "answer": "Recall — missing fraud (false negative) is far more costly than investigating a legitimate transaction (false positive). You'd also track precision to ensure you're not overwhelming the fraud team with false alerts.",
+    "source": "auto"
+  },
+  {
+    "id": "07857d44",
+    "module_id": "module-06",
+    "section_title": "🟢 Stats: A/B Testing Design Checklist",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Why randomize by user ID, not by session?",
+    "answer": "A user might have multiple sessions. If they see version A in one session and B in another, you're contaminating the experiment. Hashing user ID ensures they always see the same version.",
+    "source": "auto"
+  },
+  {
+    "id": "1d1b6358",
+    "module_id": "module-06",
+    "section_title": "🔶 Python: Generators",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "What's the difference between `[x for x in range(n)]` and `(x for x in range(n))`?",
+    "answer": "Square brackets = list comprehension (stores all values, O(n) memory). Parentheses = generator expression (yields one at a time, O(1) memory).",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "e14f7294",
+    "module_id": "module-06",
+    "section_title": "🔷 SQL: Duplicate Detection and the NULL Trap",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Table has 100 rows. Column `bonus` has 20 NULLs. What does `AVG(bonus)` divide by?",
+    "answer": "80 — it ignores the 20 NULL rows. This can be surprising if you expect it to treat NULLs as 0. If you want NULLs as 0: `AVG(COALESCE(bonus, 0))`.",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "31decde0",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "L1 vs L2: which one can zero out coefficients?",
+    "answer": "L1 (Lasso) — its absolute value penalty can drive coefficients to exactly zero.",
+    "source": "auto"
+  },
+  {
+    "id": "b42c5b9f",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Can you apply L1/L2 to a Random Forest? Why or why not?",
+    "answer": "No — L1/L2 regularize coefficients. Trees have no coefficients. Trees use max_depth, min_samples_leaf, etc.",
+    "source": "auto"
+  },
+  {
+    "id": "fd9e2855",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Precision vs recall: which do you prioritize for a cancer screening model?",
+    "answer": "Recall — missing cancer (false negative) is far worse than a false alarm (false positive).",
+    "source": "auto"
+  },
+  {
+    "id": "bf71eb71",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why is accuracy misleading for imbalanced data?",
+    "answer": "A model predicting only the majority class gets high accuracy while catching zero minority cases. 99% accuracy on 99/1 split = useless.",
+    "source": "auto"
+  },
+  {
+    "id": "6fe0f9bf",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "In an A/B test, why not check results every day?",
+    "answer": "Peeking inflates false positive rates — a test designed for α=0.05 can have 20-30% actual error rates with repeated peeking. Pre-commit to end date or use sequential methods.",
+    "source": "auto"
+  },
+  {
+    "id": "547547fb",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "`NULL = NULL` returns what?",
+    "answer": "NULL (not TRUE). Use `IS NULL` for NULL comparison.",
+    "source": "auto"
+  },
+  {
+    "id": "fd6bf28a",
+    "module_id": "module-06",
+    "section_title": "Module 06 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's a generator and when would you use one?",
+    "answer": "A function/expression that yields values lazily one at a time. Use for large datasets that don't fit in memory.",
+    "source": "auto"
+  }
+]

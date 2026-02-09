@@ -1,0 +1,108 @@
+{
+  "id": "module-08",
+  "title": "Imbalanced Data & Feature Engineering",
+  "number": 8,
+  "subtitle": "Topics: Handling imbalanced data, Feature engineering, SQL consecutive days pattern, Pandas pivot/melt, CAP theorem",
+  "sections": [
+    {
+      "title": "🟠 ML: Handling Imbalanced Data",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "If 99% of transactions are legit and 1% are fraud, a model saying \"always legit\" gets 99% accuracy — and catches zero fraud."
+        },
+        {
+          "type": "text",
+          "content": "**Solutions (in priority order)**\n\n1. **Use the right metric.** Ditch accuracy. Use F1, PR-AUC, or recall.\n\n2. **Adjust class weights.** `class_weight='balanced'` in sklearn — penalizes misclassifying the minority class more. Easy, no data modification.\n\n3. **Adjust classification threshold.** Default is 0.5. Lower it (e.g., 0.3) to catch more positives at the cost of more false positives. Tune to business needs.\n\n4. **SMOTE (Synthetic Minority Oversampling).** Creates synthetic minority examples by interpolating between existing ones.\n   🚨 **CRITICAL: Apply ONLY to training data, NEVER to validation/test** — otherwise you get data leakage.\n\n5. **Undersample majority class.** Simple but loses information.\n\n**Quick quiz:** Your interviewer asks: \"Why not just oversample the minority class by duplicating rows?\"\n\n**Answer:** Simple duplication doesn't add new information — the model just sees the same examples multiple times, which can lead to overfitting on those exact examples. SMOTE is better because it creates NEW synthetic points between existing minority samples, adding diversity. But even SMOTE can create unrealistic samples if the feature space is sparse."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟠 ML: Feature Engineering",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Transforming raw data into features that help the model learn. Often the highest-ROI activity in ML.\n\n**Common techniques:**\n- **Log transform:** Reduce skewness (income, prices → log(income))\n- **Binning:** Age → age_group (18-25, 26-35, ...)\n- **Interactions:** height × weight, price × quantity\n- **Time-based:** day_of_week, is_weekend, hours_since_last_event\n- **Aggregation:** customer's avg order value, total orders in last 30 days\n- **One-hot encoding:** categorical → binary columns\n\n**Feature selection interview answer:** \"I'd start by removing zero-variance features, then check pairwise correlation (drop one of highly correlated pairs). Use L1 regularization or tree feature importance to rank features. Validate the selected subset with cross-validation.\""
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🔷 SQL: The Consecutive Days Pattern (Tricky!)",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "\"Find users who logged in 3+ consecutive days.\""
+        },
+        {
+          "type": "code",
+          "content": "WITH numbered AS (\n  SELECT user_id, login_date,\n    login_date - INTERVAL '1 day' * ROW_NUMBER() OVER (\n      PARTITION BY user_id ORDER BY login_date\n    ) AS grp\n  FROM (SELECT DISTINCT user_id, login_date FROM logins) t\n)\nSELECT user_id, COUNT(*) AS streak\nFROM numbered\nGROUP BY user_id, grp\nHAVING COUNT(*) >= 3;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Why this works:** For consecutive dates, subtracting an incrementing row number produces the SAME value (the \"group anchor\"). Non-consecutive dates produce different values, splitting into separate groups.\n\nExample: dates 1,2,3,5,6 with row_numbers 1,2,3,4,5 → differences: 0,0,0,1,1 → two groups."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🔶 Pandas: Pivot Tables and Reshaping",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "# pivot_table = aggregate + reshape (like Excel pivot)\npd.pivot_table(df,\n    values='sales',\n    index='region',\n    columns='quarter',\n    aggfunc='sum'\n)\n\n# melt = opposite of pivot (wide → long)\npd.melt(df,\n    id_vars=['name'],\n    value_vars=['Q1', 'Q2', 'Q3'],\n    var_name='quarter',\n    value_name='sales'\n)",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**When to use pivot:** When you want to see a metric across two dimensions (region × quarter).\n**When to use melt:** When your columns ARE data (Q1, Q2, Q3 are values of \"quarter\") and you need them as rows for analysis or plotting."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🟣 Terminology: CAP Theorem and MapReduce",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**CAP Theorem**\nA distributed system can guarantee at most 2 of 3:\n- **C**onsistency — all nodes see the same data simultaneously\n- **A**vailability — every request gets a response\n- **P**artition tolerance — system works despite network failures\n\nNetwork partitions WILL happen, so you actually choose between:\n- **CP** (consistent, may reject during partitions) — banks, financial systems\n- **AP** (always responds, may serve stale data) — social media, caching"
+        },
+        {
+          "type": "text",
+          "content": "**MapReduce**\nProcessing huge datasets across many machines:\n- **Map:** Apply function to each record → key-value pairs\n- **Shuffle:** Group values by key\n- **Reduce:** Aggregate per key\n\n**Word count:** Map: each doc → (word, 1). Reduce: sum per word → (word, total).\n\n**Quick quiz:** You're building a real-time fraud detector. CP or AP system? Why?\n\n**Answer:** CP — you need consistency. A payment system can't serve stale data about account balances or fraud flags. It's better to briefly reject a transaction during a network partition than to approve a fraudulent one based on outdated info."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: P-Value Check",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Without looking, answer: \"Your A/B test got p = 0.08 at α = 0.05. A stakeholder asks if the feature works. What do you say?\"\n\n**Answer:** \"We don't have sufficient statistical evidence at our pre-set 5% significance level to conclude the feature has an effect. This doesn't mean there's NO effect — it means our sample may not be large enough to detect it. We could run the test longer or consider if the minimum detectable effect was set appropriately.\""
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Module 08 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Why is accuracy bad for imbalanced data? What metric do you use instead?\n2. What is SMOTE and what's the critical rule for using it?\n3. Explain the consecutive-days SQL trick in your own words.\n4. When do you use pivot_table vs melt in Pandas?\n5. CAP theorem: what do the three letters stand for?\n6. p = 0.08 at α = 0.05. Is the null hypothesis true?\n\n**Answers:**\n1. Predicting majority class always = high accuracy, zero usefulness. Use F1, PR-AUC, or recall depending on cost of false positives vs false negatives.\n2. Creates synthetic minority samples by interpolating between existing ones. ONLY apply to training data — never test/validation (data leakage).\n3. Subtracting an incrementing row number from consecutive dates produces the same group value. Non-consecutive dates produce different values, creating separate groups you can count.\n4. Pivot: aggregate + reshape to see a metric across two dimensions. Melt: convert column headers into row values (wide → long format).\n5. Consistency, Availability, Partition tolerance.\n6. No — \"fail to reject H₀\" ≠ \"H₀ is true.\" It means insufficient evidence at this sample size."
+        }
+      ],
+      "order": 6
+    }
+  ],
+  "source_file": "Module-08-Imbalanced-Features.md"
+}

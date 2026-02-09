@@ -1,0 +1,73 @@
+[
+  {
+    "id": "97a69c9f",
+    "module_id": "module-11",
+    "section_title": "🔶 Pandas: Memory Optimization",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "A column has 2 million rows but only 5 unique string values. How do you reduce its memory?",
+    "answer": "`df['col'] = df['col'].astype('category')` — stores 5 unique values + integer codes instead of 2M full strings. Can reduce memory 95%+.",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "2140f9ce",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Walk through a Fermi estimate for \"How many pizza deliveries happen in Chicago per day?\"",
+    "answer": "~2.8M population in city proper. Maybe 20% order pizza weekly = 560K orders/week ÷ 7 = ~80K/day. Of those, maybe 60% delivery = ~48K. Sanity check: there are ~2,000 pizza places × ~25 deliveries/day ≈ 50K. ✓",
+    "source": "auto"
+  },
+  {
+    "id": "6dca63e1",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Tabular data: deep learning or gradient boosting? Why?",
+    "answer": "Gradient boosting — faster, more interpretable, needs less data, usually outperforms DL on tabular data.",
+    "source": "auto"
+  },
+  {
+    "id": "cab4a61b",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "How does converting a string column to category type save memory?",
+    "answer": "Stores unique values once + integer codes per row, instead of full string per row. For 2M rows with 5 unique values, goes from storing 2M strings to 5 strings + 2M tiny integers.",
+    "source": "auto"
+  },
+  {
+    "id": "5a812e54",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Expected rolls to see all 6 die faces?",
+    "answer": "14.7 rolls. E = 6(1 + 1/2 + 1/3 + 1/4 + 1/5 + 1/6).",
+    "source": "auto"
+  },
+  {
+    "id": "ba5bf832",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's a star schema? Name the two types of tables.",
+    "answer": "Central fact table (transactions/events) surrounded by dimension tables (who, what, where, when). Optimized for analytical queries with simple, predictable joins.",
+    "source": "auto"
+  },
+  {
+    "id": "fc95e0a8",
+    "module_id": "module-11",
+    "section_title": "Module 11 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Bayes — a defective item from a two-machine factory. Can you set up the formula without looking?",
+    "answer": "P(A|Def) = P(Def|A)×P(A) / [P(Def|A)×P(A) + P(Def|B)×P(B)]",
+    "source": "auto"
+  }
+]

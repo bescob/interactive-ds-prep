@@ -1,0 +1,65 @@
+<div class="question-card result-card" data-idx="{{ current_idx }}" data-total="{{ total }}">
+    <div class="question-header">
+        <span class="category-tag cat-{{ question.category }}">{{ question.category }}</span>
+        <span class="question-type-tag">{{ question.question_type|replace('_', ' ')|title }}</span>
+        <span class="question-counter">{{ current_idx + 1 }} / {{ total }}</span>
+    </div>
+
+    <div class="result-columns">
+        {% if user_answer and user_answer not in ['(flashcard - mental recall)', '(spoken STAR response)'] %}
+        <div class="result-col">
+            <h4>Your Answer</h4>
+            {% if question.question_type == 'code_practice' %}
+            <pre><code class="language-{{ question.code_language or '' }}">{{ user_answer }}</code></pre>
+            {% else %}
+            <div class="user-answer-text">{{ user_answer }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="result-col">
+            <h4>Model Answer</h4>
+            {% if question.answer is looks_like_code %}
+            <pre><code class="language-{{ question.code_language or '' }}">{{ question.answer }}</code></pre>
+            {% else %}
+            <div class="model-answer-text">{{ question.answer|md }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if question.rubric %}
+    <div class="rubric-checklist">
+        <h4>Self-Check Rubric</h4>
+        {% for item in question.rubric %}
+        <label class="rubric-item">
+            <input type="checkbox">
+            <span>{{ item }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="grade-buttons">
+        <span class="grade-label">How did you do?</span>
+        <button class="btn btn-correct"
+                hx-post="/quiz/grade"
+                hx-target="closest .question-card"
+                hx-swap="outerHTML"
+                hx-vals='{"question_id": "{{ question.id }}", "grade": "correct", "module_id": "{{ module_id }}", "question_ids": "{{ question_ids }}", "current_idx": "{{ current_idx }}"}'>
+            Nailed It
+        </button>
+        <button class="btn btn-partial"
+                hx-post="/quiz/grade"
+                hx-target="closest .question-card"
+                hx-swap="outerHTML"
+                hx-vals='{"question_id": "{{ question.id }}", "grade": "partial", "module_id": "{{ module_id }}", "question_ids": "{{ question_ids }}", "current_idx": "{{ current_idx }}"}'>
+            Partial
+        </button>
+        <button class="btn btn-incorrect"
+                hx-post="/quiz/grade"
+                hx-target="closest .question-card"
+                hx-swap="outerHTML"
+                hx-vals='{"question_id": "{{ question.id }}", "grade": "incorrect", "module_id": "{{ module_id }}", "question_ids": "{{ question_ids }}", "current_idx": "{{ current_idx }}"}'>
+            Missed It
+        </button>
+    </div>
+</div>

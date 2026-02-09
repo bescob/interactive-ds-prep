@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{% if module %}Quiz: {{ module.title }}{% elif review_mode is defined and review_mode %}Review Session{% else %}Random Quiz{% endif %}{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Dashboard</a> &raquo;
+    {% if module %}
+    <a href="/module/{{ module.id }}">Module {{ '%02d' % module.number }}</a> &raquo; Quiz
+    {% elif review_mode is defined and review_mode %}
+    Review Session
+    {% else %}
+    Random Quiz
+    {% endif %}
+</div>
+
+{% if first_question_html is defined and first_question_html %}
+<div class="quiz-container">
+    <div class="quiz-progress-bar">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="quiz-progress" style="width: 0%"></div>
+        </div>
+        <span id="quiz-counter">1 / {{ total_questions }}</span>
+    </div>
+    <div id="quiz-area">
+        {{ first_question_html|safe }}
+    </div>
+</div>
+{% elif module %}
+<div class="quiz-config">
+    <h1>Quiz: {{ module.title }}</h1>
+    <p>{{ total_questions }} questions available</p>
+
+    <form hx-post="/quiz/next" hx-target="#quiz-area" hx-swap="innerHTML" id="quiz-config-form">
+        <input type="hidden" name="module_id" value="{{ module.id }}">
+
+        <div class="form-group">
+            <label>Categories</label>
+            <div class="checkbox-group">
+                {% for cat in categories %}
+                <label class="checkbox-label">
+                    <input type="checkbox" name="categories" value="{{ cat }}" checked>
+                    <span class="category-tag cat-{{ cat }}">{{ cat }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Question Types</label>
+            <div class="checkbox-group">
+                {% for t in types %}
+                <label class="checkbox-label">
+                    <input type="checkbox" name="types" value="{{ t }}" checked>
+                    <span>{{ t|replace('_', ' ')|title }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="count">Number of questions</label>
+            <input type="range" id="count" name="count" min="5" max="{{ total_questions }}" value="{{ [10, total_questions]|min }}"
+                   oninput="document.getElementById('count-display').textContent = this.value">
+            <span id="count-display">{{ [10, total_questions]|min }}</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg"
+                onclick="document.getElementById('quiz-config-form').classList.add('hidden'); document.getElementById('quiz-wrapper').classList.remove('hidden')">
+            Start Quiz
+        </button>
+    </form>
+</div>
+<div id="quiz-wrapper" class="hidden">
+    <div class="quiz-container">
+        <div class="quiz-progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="quiz-progress" style="width: 0%"></div>
+            </div>
+            <span id="quiz-counter"></span>
+        </div>
+        <div id="quiz-area"></div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

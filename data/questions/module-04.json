@@ -1,0 +1,103 @@
+[
+  {
+    "id": "e06a1f05",
+    "module_id": "module-04",
+    "section_title": "🟢 Stats: Hypothesis Testing Step-by-Step",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "An interviewer asks: \"Your A/B test got p = 0.04. What does that mean?\" Answer in one clear sentence.",
+    "answer": "\"If the new feature truly had no effect on the metric, there's only a 4% probability we'd observe a difference this large or larger in our experiment — so we reject the null hypothesis at the 5% significance level.\"",
+    "source": "auto"
+  },
+  {
+    "id": "9e77b947",
+    "module_id": "module-04",
+    "section_title": "🟢 Stats: Type I and Type II Errors",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Your boss says \"we can only detect a 5% lift — the actual lift is probably 2%. What do we need?\"",
+    "answer": "More sample size. Power depends on effect size — a smaller expected effect needs a much larger sample to detect. You'd recalculate n using the power formula with the smaller minimum detectable effect.",
+    "source": "auto"
+  },
+  {
+    "id": "dd49f170",
+    "module_id": "module-04",
+    "section_title": "🔷 SQL: Self-Joins",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Table `flights` has columns: flight_id, origin, destination, departure_time. Write a query to find all pairs of flights where you can connect (flight 1's destination = flight 2's origin, and flight 2 departs after flight 1 arrives).",
+    "answer": "",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "6da8d3ae",
+    "module_id": "module-04",
+    "section_title": "🟣 Terminology: Normalization vs Denormalization",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "You're designing a data warehouse for analytics. Normalized or denormalized? Why?",
+    "answer": "Denormalized (or a star schema). Analytics queries aggregate across many dimensions — pre-joining reduces the need for expensive runtime JOINs. Read performance matters more than write efficiency in a warehouse.",
+    "source": "auto"
+  },
+  {
+    "id": "7bb433e7",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "State what a p-value means in one sentence.",
+    "answer": "The probability of observing data as extreme or more extreme than what was observed, assuming the null hypothesis is true.",
+    "source": "auto"
+  },
+  {
+    "id": "632862f9",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Type I vs Type II — which is the false positive?",
+    "answer": "Type I is the false positive (rejecting H₀ when it's true — \"crying wolf\").",
+    "source": "auto"
+  },
+  {
+    "id": "7675b277",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Write a self-join to find employees who report to the same manager.",
+    "answer": "`SELECT a.name, b.name FROM employees a JOIN employees b ON a.manager_id = b.manager_id AND a.employee_id < b.employee_id` (the < avoids duplicates and self-pairs)",
+    "source": "auto"
+  },
+  {
+    "id": "9d9a0bff",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "`df.loc[0:3]` vs `df.iloc[0:3]` — how many rows each?",
+    "answer": "`loc[0:3]` = 4 rows (labels 0,1,2,3 — inclusive). `iloc[0:3]` = 3 rows (positions 0,1,2 — exclusive end).",
+    "source": "auto"
+  },
+  {
+    "id": "d5529417",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's the SettingWithCopyWarning and how do you fix it?",
+    "answer": "Chained indexing (`df[...][...] = val`) may modify a copy. Fix: use `df.loc[condition, column] = val`.",
+    "source": "auto"
+  },
+  {
+    "id": "cf4e5cbd",
+    "module_id": "module-04",
+    "section_title": "Module 04 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Normalized vs denormalized database — which for analytics and why?",
+    "answer": "Denormalized — fewer JOINs means faster analytical queries. Read performance > write efficiency for analytics.",
+    "source": "auto"
+  }
+]

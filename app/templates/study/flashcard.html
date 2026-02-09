@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Flashcards: {{ module.title }}{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Dashboard</a> &raquo;
+    <a href="/module/{{ module.id }}">Module {{ '%02d' % module.number }}</a> &raquo;
+    Flashcards
+</div>
+
+<div class="flashcard-container" id="flashcard-app">
+    <div class="flashcard-progress">
+        <span id="card-counter">1 / {{ cards|length }}</span>
+        <div class="progress-bar-container small">
+            <div class="progress-bar" id="card-progress-bar" style="width: {{ (1 / cards|length * 100) if cards|length > 0 else 0 }}%"></div>
+        </div>
+    </div>
+
+    <div class="flashcard-deck">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner" id="flashcard-inner">
+                <div class="flashcard-front">
+                    <span class="category-tag" id="card-category"></span>
+                    <p id="card-front"></p>
+                </div>
+                <div class="flashcard-back">
+                    <p id="card-back"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flashcard-controls">
+        <button class="btn btn-ghost" onclick="prevCard()" id="btn-prev">&larr; Prev</button>
+        <button class="btn btn-secondary" onclick="flipCard()">Flip (Space)</button>
+        <button class="btn btn-ghost" onclick="nextCard()" id="btn-next">Next &rarr;</button>
+    </div>
+
+    <div class="flashcard-hint">
+        Space = flip &middot; &larr;/&rarr; = navigate &middot; Click card to flip
+    </div>
+</div>
+
+<script>
+    var flashcardData = {{ cards|tojson }};
+</script>
+{% endblock %}

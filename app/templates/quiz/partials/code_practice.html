@@ -1,0 +1,25 @@
+<div class="question-card" data-idx="{{ current_idx }}" data-total="{{ total }}">
+    <div class="question-header">
+        <span class="category-tag cat-{{ question.category }}">{{ question.category }}</span>
+        <span class="question-type-tag">Code Practice</span>
+        <span class="question-counter">{{ current_idx + 1 }} / {{ total }}</span>
+    </div>
+    <div class="question-prompt">
+        {{ question.prompt|md }}
+    </div>
+    <form hx-post="/quiz/submit" hx-target="closest .question-card" hx-swap="outerHTML">
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        <input type="hidden" name="module_id" value="{{ module_id }}">
+        <input type="hidden" name="question_ids" value="{{ question_ids }}">
+        <input type="hidden" name="current_idx" value="{{ current_idx }}">
+        <div class="code-editor-wrapper">
+            <div class="code-editor-header">
+                <span>{{ question.code_language or 'code' }}</span>
+            </div>
+            <textarea name="user_answer" class="code-editor" rows="10"
+                      placeholder="Write your {{ question.code_language or 'code' }} here..."
+                      spellcheck="false" data-language="{{ question.code_language or '' }}"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit &amp; Reveal Answer</button>
+    </form>
+</div>

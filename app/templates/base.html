@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DS Interview Prep{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('static', filename='js/htmx.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/highlight.min.css') }}">
+    <script src="{{ url_for('static', filename='vendor/highlight.min.js') }}"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="nav-brand">ds prep</a>
+            <div class="nav-links">
+                <a href="/">home</a>
+                <a href="/review">review</a>
+                <a href="/random">random</a>
+                <a href="/admin/questions">questions</a>
+                <a href="/admin/ingest">import</a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <span class="theme-icon">&#9789;</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <a href="https://bescob.ar">bescob.ar</a>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            document.querySelector('.theme-icon').textContent = next === 'dark' ? '\u2600' : '\u263D';
+        }
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+                if (saved === 'dark') {
+                    document.querySelector('.theme-icon').textContent = '\u2600';
+                }
+            }
+        })();
+        document.body.addEventListener('htmx:afterSwap', function() {
+            document.querySelectorAll('pre code').forEach(function(block) {
+                hljs.highlightElement(block);
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/flashcard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/code-editor.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

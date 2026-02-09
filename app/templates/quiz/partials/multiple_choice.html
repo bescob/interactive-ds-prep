@@ -1,0 +1,26 @@
+<div class="question-card" data-idx="{{ current_idx }}" data-total="{{ total }}">
+    <div class="question-header">
+        <span class="category-tag cat-{{ question.category }}">{{ question.category }}</span>
+        <span class="question-type-tag">Multiple Choice</span>
+        <span class="question-counter">{{ current_idx + 1 }} / {{ total }}</span>
+    </div>
+    <div class="question-prompt">
+        {{ question.prompt|md }}
+    </div>
+    <form hx-post="/quiz/submit" hx-target="closest .question-card" hx-swap="outerHTML">
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        <input type="hidden" name="module_id" value="{{ module_id }}">
+        <input type="hidden" name="question_ids" value="{{ question_ids }}">
+        <input type="hidden" name="current_idx" value="{{ current_idx }}">
+        <div class="mc-options">
+            {% for option in question.options %}
+            <label class="mc-option" tabindex="0">
+                <input type="radio" name="user_answer" value="{{ option }}" required>
+                <span class="mc-key">{{ loop.index }}</span>
+                <span class="mc-text">{{ option }}</span>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

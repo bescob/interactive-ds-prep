@@ -1,0 +1,112 @@
+[
+  {
+    "id": "0a3024d3",
+    "module_id": "module-10",
+    "section_title": "🟢 Stats: Central Limit Theorem — The Foundation of Everything",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "You sample 100 customer wait times. Mean = 5 min, SD = 3 min. What's the standard error of the mean?",
+    "answer": "SE = σ/√n = 3/√100 = 3/10 = **0.3 minutes.** Even though individual wait times vary widely (SD=3), the mean of 100 observations is estimated with much more precision.",
+    "source": "auto"
+  },
+  {
+    "id": "f967d473",
+    "module_id": "module-10",
+    "section_title": "🟢 Stats: Confidence Intervals — What They Really Mean",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Sample mean = 50, SD = 12, n = 36. What's the 95% CI?",
+    "answer": "SE = 12/√36 = 2. CI = 50 ± 1.96 × 2 = 50 ± 3.92 = **(46.08, 53.92)**",
+    "source": "auto"
+  },
+  {
+    "id": "f95b45ca",
+    "module_id": "module-10",
+    "section_title": "🟠 ML: Gradient Descent",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "\"What IS a loss function?\" (Explain simply.)",
+    "answer": "A measure of how wrong the model's predictions are. Lower = better. MSE for regression (average squared error), log loss for classification (penalizes confident wrong predictions heavily). Gradient descent minimizes this function.",
+    "source": "auto"
+  },
+  {
+    "id": "e2e2fa4e",
+    "module_id": "module-10",
+    "section_title": "🟣 Terminology: Batch vs Streaming Processing",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "You're building a dashboard that shows the CEO daily revenue summaries. Batch or streaming?",
+    "answer": "Batch — daily summaries don't need real-time processing. Run a daily ETL job overnight. Reserve streaming for things that need sub-second response (fraud detection, live pricing).",
+    "source": "auto"
+  },
+  {
+    "id": "b9c8721d",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "State the CLT in one sentence.",
+    "answer": "Regardless of the underlying distribution, sample means approach a normal distribution as sample size increases, with mean = population mean and SD = σ/√n.",
+    "source": "auto"
+  },
+  {
+    "id": "9a2d00d2",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Sample mean = 100, SD = 20, n = 64. What's the 95% CI?",
+    "answer": "SE = 20/√64 = 2.5. CI = 100 ± 1.96 × 2.5 = 100 ± 4.9 = **(95.1, 104.9)**",
+    "source": "auto"
+  },
+  {
+    "id": "1b119ee7",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does a 95% confidence interval ACTUALLY mean?",
+    "answer": "If you repeated the experiment 100 times, ~95 of the resulting intervals would contain the true value. NOT \"95% probability the true value is in this interval.\"",
+    "source": "auto"
+  },
+  {
+    "id": "5ca8a6fa",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "EXISTS vs IN — when do you use each?",
+    "answer": "EXISTS for large tables/correlated subqueries (stops at first match). IN for small static value lists.",
+    "source": "auto"
+  },
+  {
+    "id": "cf4f4530",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is a correlated subquery?",
+    "answer": "A subquery that references the outer query, re-executing for each outer row.",
+    "source": "auto"
+  },
+  {
+    "id": "f712eaad",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Learning rate too high → what happens? Too low?",
+    "answer": "Too high → overshoots, oscillates, may diverge. Too low → very slow convergence.",
+    "source": "auto"
+  },
+  {
+    "id": "ea913a52",
+    "module_id": "module-10",
+    "section_title": "Module 10 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Batch vs streaming — which for a real-time fraud alert system?",
+    "answer": "Streaming — fraud detection needs millisecond response times.",
+    "source": "auto"
+  }
+]

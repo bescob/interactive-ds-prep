@@ -1,0 +1,103 @@
+[
+  {
+    "id": "6c82876f",
+    "module_id": "module-09",
+    "section_title": "🟠 ML: Cross-Validation",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "You're predicting daily stock prices. Can you use standard 5-fold CV?",
+    "answer": "No — time series data has temporal dependencies. Random folds would leak future information into training. Use walk-forward or time-series split.",
+    "source": "auto"
+  },
+  {
+    "id": "660943fc",
+    "module_id": "module-09",
+    "section_title": "🟠 ML: Decision Trees — The Intuitive Model",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "Your decision tree has 100% training accuracy. Good or bad?",
+    "answer": "Bad — almost certainly overfitting. An unconstrained tree can memorize every training example by creating a leaf for each one. Regularize with max_depth, min_samples_leaf.",
+    "source": "auto"
+  },
+  {
+    "id": "38ee5611",
+    "module_id": "module-09",
+    "section_title": "🟠 Product Sense: Metric Design",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "\"Total app downloads reached 50 million!\" Is this a good success metric?",
+    "answer": "No — it's a vanity metric. It only goes up and says nothing about engagement. Many downloaded apps are never opened. Better: DAU, d7 retention, or MAU with an engagement threshold.",
+    "source": "auto"
+  },
+  {
+    "id": "e010af18",
+    "module_id": "module-09",
+    "section_title": "🔷 SQL: Date Manipulation Cheat Sheet",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Write a query to get the first day of each user's signup month.",
+    "answer": "`SELECT user_id, DATE_TRUNC('month', signup_date) AS signup_month FROM users`",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "cc979e3f",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why can't you use standard k-fold CV on time series data?",
+    "answer": "Random splits leak future data into training, violating temporal order. Use walk-forward/time-series split.",
+    "source": "auto"
+  },
+  {
+    "id": "6a37741b",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is Gini impurity? What value means maximum impurity for binary classification?",
+    "answer": "Gini = 1 - Σ(pᵢ²). For binary: max impurity = 0.5 (50/50 class split).",
+    "source": "auto"
+  },
+  {
+    "id": "5d95b56e",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Name 3 North Star metrics for 3 different companies.",
+    "answer": "Facebook: DAU. Airbnb: nights booked. Spotify: time listening. Slack: messages/user/day. Uber: rides completed.",
+    "source": "auto"
+  },
+  {
+    "id": "8f679dd5",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does a Python decorator actually do mechanically?",
+    "answer": "It replaces the original function with a wrapper function that calls the original but adds behavior (logging, timing, caching, etc.).",
+    "source": "auto"
+  },
+  {
+    "id": "8c65d292",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "`DATE_TRUNC('month', '2024-07-18')` returns what?",
+    "answer": "2024-07-01 (first day of the month).",
+    "source": "auto"
+  },
+  {
+    "id": "0597903c",
+    "module_id": "module-09",
+    "section_title": "Module 09 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Your decision tree has 100% train accuracy and 60% test accuracy. Diagnose.",
+    "answer": "Overfitting — 40% gap between train and test. Regularize: increase min_samples_leaf, decrease max_depth, or switch to Random Forest/boosting.",
+    "source": "auto"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "3b5c6124",
+    "module_id": "module-07",
+    "section_title": "🟢 Stats: A/B Testing Pitfalls (Interviewers Love These)",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "You run an A/B test for 3 days, see p=0.02, and your PM wants to ship immediately. What do you say?",
+    "answer": "\"We should wait. Three days isn't enough to capture weekly patterns (weekday vs weekend behavior differs). Also, early significance with a small sample is unreliable — the effect size estimate is noisy and may shrink. Let's run to our pre-committed duration.\"",
+    "source": "auto"
+  },
+  {
+    "id": "2dea1f79",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Name 3 A/B testing pitfalls and the fix for each.",
+    "answer": "Peeking (pre-commit to end date), multiple testing (Bonferroni correction or single primary metric), novelty effect (run longer). Also: Simpson's paradox (check segments), network effects (cluster randomization).",
+    "source": "auto"
+  },
+  {
+    "id": "4f01edeb",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is CUPED and why does it help?",
+    "answer": "Reduces variance by adjusting for pre-experiment behavior, letting you detect smaller effects with the same sample size.",
+    "source": "auto"
+  },
+  {
+    "id": "85ec87e3",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "\"DAU dropped 10%.\" What's your first question?",
+    "answer": "\"Is this compared to last week or same week last year? Is it all platforms/regions, or concentrated somewhere?\" — clarify before decomposing.",
+    "source": "auto"
+  },
+  {
+    "id": "80ea10f8",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does the sigmoid function do in logistic regression?",
+    "answer": "Squashes any real number to (0,1), making the output interpretable as a probability.",
+    "source": "auto"
+  },
+  {
+    "id": "0570d718",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "When should you drop NaN vs fill it?",
+    "answer": "Drop if random + few rows. Fill if data is valuable, but check whether missingness itself is informative.",
+    "source": "auto"
+  },
+  {
+    "id": "19d0e14b",
+    "module_id": "module-07",
+    "section_title": "Module 07 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Tell your \"failure\" STAR story in under 2 minutes. (Actually do this out loud.)",
+    "answer": "(Self-grade: Did you use \"I\"? Quantify? Show learning? Under 2 min?)",
+    "source": "auto"
+  }
+]

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Import Content{% endblock %}
+{% block content %}
+<h1>Import Markdown Content</h1>
+<p>Paste markdown content (e.g. from Claude.ai) to create a new module.</p>
+
+<form method="POST" action="/admin/ingest">
+    <div class="form-group">
+        <label for="title">Module Title</label>
+        <input type="text" id="title" name="title" value="{{ title if title is defined else '' }}" placeholder="e.g. Advanced SQL Patterns" class="form-input">
+    </div>
+    <div class="form-group">
+        <label for="content">Markdown Content</label>
+        <textarea id="content" name="content" rows="20" class="form-textarea" placeholder="Paste your markdown here...">{{ content if content is defined else '' }}</textarea>
+    </div>
+    <div class="form-actions">
+        <button type="submit" name="action" value="preview" class="btn btn-secondary">Preview Parse</button>
+        <button type="submit" name="action" value="save" class="btn btn-primary">Save Module</button>
+    </div>
+</form>
+
+{% if preview_module is defined and preview_module %}
+<div class="preview-section">
+    <h2>Parse Preview</h2>
+    <div class="preview-info">
+        <p><strong>Module ID:</strong> {{ preview_module.id }}</p>
+        <p><strong>Sections found:</strong> {{ preview_module.sections|length }}</p>
+        <p><strong>Questions extracted:</strong> {{ preview_questions|length }}</p>
+    </div>
+
+    <h3>Sections</h3>
+    {% for section in preview_module.sections %}
+    <div class="preview-card">
+        <span class="category-tag cat-{{ section.category }}">{{ section.category }}</span>
+        <strong>{{ section.title }}</strong>
+        <span class="text-muted">({{ section.blocks|length }} blocks)</span>
+    </div>
+    {% endfor %}
+
+    {% if preview_questions %}
+    <h3>Questions</h3>
+    {% for q in preview_questions %}
+    <div class="preview-card">
+        <span class="category-tag cat-{{ q.category }}">{{ q.category }}</span>
+        <span class="question-type-tag">{{ q.question_type }}</span>
+        <p>{{ q.prompt[:100] }}{% if q.prompt|length > 100 %}...{% endif %}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

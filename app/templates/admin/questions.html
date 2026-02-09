@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Question Bank{% endblock %}
+{% block content %}
+<h1>Question Bank</h1>
+
+<div class="filter-bar">
+    <form method="GET" action="/admin/questions" class="filter-form">
+        <select name="module" class="form-select" onchange="this.form.submit()">
+            <option value="">All Modules</option>
+            {% for m in modules %}
+            <option value="{{ m.id }}" {% if selected_module == m.id %}selected{% endif %}>
+                {{ '%02d' % m.number }}: {{ m.title }}
+            </option>
+            {% endfor %}
+        </select>
+        <select name="category" class="form-select" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+        <select name="type" class="form-select" onchange="this.form.submit()">
+            <option value="">All Types</option>
+            {% for t in types %}
+            <option value="{{ t }}" {% if selected_type == t %}selected{% endif %}>{{ t|replace('_',' ')|title }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<p class="results-count">{{ questions|length }} questions</p>
+
+<!-- Add Question Form -->
+<details class="add-question-panel">
+    <summary class="btn btn-secondary">+ Add Question</summary>
+    <form method="POST" action="/admin/questions/add" class="question-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Module</label>
+                <select name="module_id" class="form-select" required>
+                    {% for m in modules %}
+                    <option value="{{ m.id }}">{{ '%02d' % m.number }}: {{ m.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category" class="form-select">
+                    {% for cat in categories %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select name="question_type" class="form-select">
+                    {% for t in question_types %}
+                    <option value="{{ t }}">{{ t|replace('_',' ')|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Prompt</label>
+            <textarea name="prompt" rows="3" class="form-textarea" required placeholder="Question text..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Answer</label>
+            <textarea name="answer" rows="3" class="form-textarea" required placeholder="Model answer..."></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Code Language (optional)</label>
+                <input type="text" name="code_language" class="form-input" placeholder="sql, python">
+            </div>
+            <div class="form-group">
+                <label>Section Title</label>
+                <input type="text" name="section_title" class="form-input" value="Custom" placeholder="Section name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Options (one per line, for multiple choice)</label>
+            <textarea name="options" rows="4" class="form-textarea" placeholder="Option A&#10;Option B&#10;Option C&#10;Option D"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Rubric (one per line, for STAR/free text)</label>
+            <textarea name="rubric" rows="3" class="form-textarea" placeholder="Key point 1&#10;Key point 2"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Question</button>
+    </form>
+</details>
+
+<!-- Question List -->
+<div class="question-list">
+    {% for q in questions %}
+    <div class="question-list-item">
+        <div class="question-list-header">
+            <span class="category-tag cat-{{ q.category }}">{{ q.category }}</span>
+            <span class="question-type-tag">{{ q.question_type|replace('_',' ')|title }}</span>
+            <span class="text-muted">{{ q.module_id }}</span>
+            {% if q.source == 'manual' %}
+            <span class="badge badge-manual">manual</span>
+            {% endif %}
+        </div>
+        <p class="question-list-prompt">{{ q.prompt }}</p>
+        <details class="question-details">
+            <summary>Answer &amp; Edit</summary>
+            <div class="answer-preview">{{ q.answer }}</div>
+            <form method="POST" action="/admin/questions/{{ q.module_id }}/{{ q.id }}/edit" class="edit-form">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="question_type" class="form-select">
+                        {% for t in question_types %}
+                        <option value="{{ t }}" {% if q.question_type == t %}selected{% endif %}>{{ t|replace('_',' ')|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prompt</label>
+                    <textarea name="prompt" rows="2" class="form-textarea">{{ q.prompt }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Answer</label>
+                    <textarea name="answer" rows="2" class="form-textarea">{{ q.answer }}</textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+                    <button type="submit" formaction="/admin/questions/{{ q.module_id }}/{{ q.id }}/delete" class="btn btn-ghost btn-sm"
+                            onclick="return confirm('Delete this question?')">Delete</button>
+                </div>
+            </form>
+        </details>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

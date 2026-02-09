@@ -1,0 +1,93 @@
+{
+  "id": "module-05",
+  "title": "Algorithm Arena",
+  "number": 5,
+  "subtitle": "Topics: Bias-variance tradeoff, Random Forest vs XGBoost, SQL rolling averages, Probability puzzles",
+  "sections": [
+    {
+      "title": "🟠 ML: The Bias-Variance Tradeoff",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Total Error = Bias² + Variance + Irreducible Error**\n\n**Bias** = systematic error from oversimplified model. \"A straight line trying to fit a curve.\"\n**Variance** = sensitivity to training data. \"The model memorized the noise.\"\n\n| Symptom | Diagnosis | Fix |\n|---|---|---|\n| Both train AND test error high | High bias (underfitting) | More complex model, add features, less regularization |\n| Low train error, HIGH test error | High variance (overfitting) | More data, regularization, simpler model, dropout |\n\n**Quick quiz:** Your model gets 95% train accuracy and 72% test accuracy. What's the problem and what do you try first?\n\n**Answer:** Overfitting (high variance) — 23% gap between train and test. Try: more training data, add regularization (L1/L2), reduce model complexity, or use dropout if neural net."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟠 ML: Random Forest vs Gradient Boosting",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "| Aspect | Random Forest | Gradient Boosting (XGBoost) |\n|---|---|---|\n| How trees are built | Independently, in parallel | Sequentially, each corrects errors |\n| Individual trees | Deep (strong learners) | Shallow (weak learners, 3-6 levels) |\n| Primary effect | Reduces variance | Reduces bias |\n| Overfitting risk | Lower | Higher |\n| Tuning difficulty | Easy (good defaults) | Hard (learning rate, depth, subsample) |\n| When to use | Quick baseline, noisy data, limited tuning time | Max accuracy, clean data, time to tune |\n\n**Interview question:** \"When would you pick Random Forest over XGBoost?\"\n\n**Answer:** \"When I have limited tuning time, noisy data, or need a reliable baseline fast. RF is harder to screw up — works well with defaults. XGBoost can outperform with careful tuning but can also overfit badly with wrong hyperparameters.\""
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🔷 SQL: Rolling Averages",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "-- 7-day rolling average of daily revenue\nSELECT date, revenue,\n  AVG(revenue) OVER (\n    ORDER BY date\n    ROWS BETWEEN 6 PRECEDING AND CURRENT ROW\n  ) AS rolling_7d_avg\nFROM daily_revenue;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Key detail:** 6 PRECEDING + CURRENT ROW = 7 rows total. A common mistake is writing `7 PRECEDING` which gives 8 rows.\n\n**Running total (cumulative sum):**"
+        },
+        {
+          "type": "code",
+          "content": "SUM(amount) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
+          "language": "sql"
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟢 Stats: Classic Probability Puzzles",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Monty Hall**\nYou pick Door 1 (1/3 chance of winning). Host opens Door 3 (goat). Should you switch to Door 2?\n\n**Always switch. Switching = 2/3. Staying = 1/3.**\n\nYour initial 1/3 didn't change. The other two doors had 2/3 combined. Host revealed one was wrong, so the remaining door inherits the full 2/3."
+        },
+        {
+          "type": "text",
+          "content": "**Birthday Problem**\nHow many people for >50% chance of a shared birthday? **23.**\n\nCompute complement: P(no match) = (364/365)(363/365)...(343/365). At n=23, P(no match) < 0.5."
+        },
+        {
+          "type": "text",
+          "content": "**Expected value of a die roll**\nE = 1(1/6) + 2(1/6) + 3(1/6) + 4(1/6) + 5(1/6) + 6(1/6) = **3.5**\n\n\"Would you pay $4 to play a game where you win whatever you roll in dollars?\" **No** — expected payout is $3.50, you'd lose $0.50 on average."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🟠 Behavioral: The \"Data-Driven Decision\" Story",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "This is the #1 most-asked behavioral question. Have your STAR ready:\n\n**Template (adapt to your experience):**\n- **S:** \"On the [X] team, stakeholders wanted to [do something based on intuition].\"\n- **T:** \"I needed to validate/challenge this assumption with data.\"\n- **A:** \"I pulled data from [source], ran [analysis], and found [counterintuitive insight]. I presented this to [stakeholders] using [visualization/simple framing].\"\n- **R:** \"This changed the decision to [better outcome], resulting in [quantified impact].\"\n\n**Practice saying your version out loud right now. Time yourself — aim for under 2 minutes.**"
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "Module 05 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Your model has high BOTH train and test error. Diagnosis and fix?\n2. RF reduces ___. XGBoost reduces ___.\n3. Write a 3-day rolling average window clause.\n4. Why should you switch in Monty Hall?\n5. Expected value of rolling a fair die?\n6. How many people for >50% shared birthday probability?\n\n**Answers:**\n1. Underfitting (high bias). Fix: more complex model, add features, reduce regularization.\n2. RF reduces variance. XGBoost reduces bias.\n3. `AVG(x) OVER (ORDER BY date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)`\n4. Initial pick = 1/3. The remaining door inherits the full 2/3 after the host reveals a goat.\n5. 3.5\n6. 23 people."
+        }
+      ],
+      "order": 5
+    }
+  ],
+  "source_file": "Module-05-Algorithm-Arena.md"
+}

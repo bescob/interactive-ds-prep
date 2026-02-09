@@ -1,0 +1,27 @@
+<div class="question-card" data-idx="{{ current_idx }}" data-total="{{ total }}">
+    <div class="question-header">
+        <span class="category-tag cat-{{ question.category }}">{{ question.category }}</span>
+        <span class="question-type-tag">Fill in the Blank</span>
+        <span class="question-counter">{{ current_idx + 1 }} / {{ total }}</span>
+    </div>
+    <div class="question-prompt">
+        {{ question.prompt|md }}
+    </div>
+    <form hx-post="/quiz/submit" hx-target="closest .question-card" hx-swap="outerHTML">
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        <input type="hidden" name="module_id" value="{{ module_id }}">
+        <input type="hidden" name="question_ids" value="{{ question_ids }}">
+        <input type="hidden" name="current_idx" value="{{ current_idx }}">
+        {% if question.blanks %}
+        {% for blank in question.blanks %}
+        <div class="blank-input-group">
+            <label>Blank {{ loop.index }}:</label>
+            <input type="text" name="user_answer" class="blank-input" placeholder="..." autocomplete="off">
+        </div>
+        {% endfor %}
+        {% else %}
+        <input type="text" name="user_answer" class="blank-input full-width" placeholder="Your answer..." autocomplete="off">
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Check Answer</button>
+    </form>
+</div>

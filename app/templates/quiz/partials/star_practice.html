@@ -1,0 +1,29 @@
+<div class="question-card" data-idx="{{ current_idx }}" data-total="{{ total }}">
+    <div class="question-header">
+        <span class="category-tag cat-behavioral">behavioral</span>
+        <span class="question-type-tag">STAR Practice</span>
+        <span class="question-counter">{{ current_idx + 1 }} / {{ total }}</span>
+    </div>
+    <div class="question-prompt">
+        {{ question.prompt|md }}
+    </div>
+    <div class="star-timer-section">
+        <div class="timer-ring" id="timer-ring-{{ current_idx }}">
+            <svg viewBox="0 0 100 100">
+                <circle class="timer-bg" cx="50" cy="50" r="45"/>
+                <circle class="timer-fill" cx="50" cy="50" r="45" id="timer-circle-{{ current_idx }}"/>
+            </svg>
+            <span class="timer-text" id="timer-text-{{ current_idx }}">2:00</span>
+        </div>
+        <button class="btn btn-secondary" onclick="startStarTimer({{ current_idx }})">Start Timer (2 min)</button>
+        <p class="star-instruction">Speak your answer out loud using the STAR framework.</p>
+    </div>
+    <form hx-post="/quiz/submit" hx-target="closest .question-card" hx-swap="outerHTML">
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        <input type="hidden" name="module_id" value="{{ module_id }}">
+        <input type="hidden" name="question_ids" value="{{ question_ids }}">
+        <input type="hidden" name="current_idx" value="{{ current_idx }}">
+        <input type="hidden" name="user_answer" value="(spoken STAR response)">
+        <button type="submit" class="btn btn-primary">Done - Show Rubric</button>
+    </form>
+</div>

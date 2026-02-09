@@ -1,0 +1,72 @@
+[
+  {
+    "id": "f591eefe",
+    "module_id": "module-13",
+    "section_title": "🟠 ML: PCA in Simple Terms",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "You have 200 features. After PCA, the first 15 components explain 95% of variance. What do you do?",
+    "answer": "Keep 15 components, drop the rest. You've reduced from 200 to 15 dimensions while retaining 95% of the information. The remaining 185 components mostly capture noise.",
+    "source": "auto"
+  },
+  {
+    "id": "60453f47",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Name 2 ways Chicago DS interviews differ from FAANG.",
+    "answer": "More modeling questions (less LeetCode), domain knowledge heavily weighted, take-home assignments standard, rigid STAR behavioral.",
+    "source": "auto"
+  },
+  {
+    "id": "ba2aafb7",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is PCA? Is it feature selection?",
+    "answer": "PCA finds new axes (principal components) that capture maximum variance, then keeps the top k. It's NOT feature selection — each component is a linear combination of ALL original features.",
+    "source": "auto"
+  },
+  {
+    "id": "d6fb9e58",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "WHERE vs HAVING: which filters groups after aggregation?",
+    "answer": "HAVING — WHERE filters individual rows before grouping.",
+    "source": "auto"
+  },
+  {
+    "id": "a501e236",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does `if __name__ == '__main__'` do?",
+    "answer": "Checks if the script is run directly (executes the code) vs imported as a module (skips the code).",
+    "source": "auto"
+  },
+  {
+    "id": "a6062821",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Recite the A/B test design steps from memory.",
+    "answer": "(1) Hypothesis (2) Metrics (primary/secondary/guardrail) (3) Sample size (4) Duration ≥2 weeks (5) Randomize by user (6) Analyze at end date — no peeking (7) Statistical + practical significance.",
+    "source": "auto"
+  },
+  {
+    "id": "700fa535",
+    "module_id": "module-13",
+    "section_title": "Module 13 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Your SWE background — how is this an advantage for Chicago DS roles?",
+    "answer": "Most Chicago DS candidates come from analytics/academia. Your ability to build end-to-end systems (pipelines, deployment, production code) is rare and highly valued. Lean into this in every behavioral.",
+    "source": "auto"
+  }
+]

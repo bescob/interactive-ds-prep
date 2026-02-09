@@ -1,0 +1,110 @@
+{
+  "id": "module-12",
+  "title": "Terminology Blitz & Advanced Product Sense",
+  "number": 12,
+  "subtitle": "Topics: NLP basics, Time series concepts, Advanced product questions, MLOps terminology, SQL UNION",
+  "sections": [
+    {
+      "title": "🟣 Terminology: NLP Basics",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Tokenization:** Splitting text into units. \"I love cats\" → [\"I\", \"love\", \"cats\"]. Modern models use subword tokenization (handles unknown words).\n\n**TF-IDF:** Term Frequency × Inverse Document Frequency. Words frequent in one document but rare everywhere get high scores. Common words (\"the\", \"is\") get low scores. Simple but surprisingly effective baseline.\n\n**Word Embeddings (Word2Vec, GloVe):** Map words to dense vectors. Similar words are close together. Famous: \"king\" - \"man\" + \"woman\" ≈ \"queen\".\n\n**Transformers/BERT:** Contextual embeddings — same word gets DIFFERENT vectors depending on context. \"bank\" in \"river bank\" ≠ \"bank\" in \"bank account.\" Foundation of modern NLP.\n\n**Quick quiz:** What's the key advantage of BERT over Word2Vec?\n\n**Answer:** BERT produces contextual embeddings — the same word gets different representations depending on surrounding words. Word2Vec gives each word a single fixed vector regardless of context."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟣 Terminology: Time Series Concepts",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Stationarity:** Statistical properties (mean, variance) don't change over time. Most models require this. Test: ADF (Augmented Dickey-Fuller). Fix: differencing.\n\n**Seasonality:** Regular periodic patterns (daily, weekly, yearly).\n\n**Trend:** Long-term directional movement (up, down, flat).\n\n**Autocorrelation:** Correlation of a series with lagged versions of itself. High at lag 7? Weekly pattern.\n\n**ARIMA:** AutoRegressive (past values predict future) + Integrated (differencing) + Moving Average (past errors predict future). Parameters: (p, d, q) = AR order, differencing order, MA order.\n\n**Quick quiz:** A time series of daily ice cream sales has an upward slope and spikes every summer. Name the two components.\n\n**Answer:** Trend (upward slope) and seasonality (annual summer spikes)."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟣 Terminology: MLOps & Production ML",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Feature Store:** Centralized system for storing/serving ML features. Ensures consistency between training and serving.\n\n**Training-Serving Skew:** When features are computed differently in training (batch) vs production (real-time). Causes silent performance degradation. Feature stores fix this.\n\n**Model Drift:** Performance degrades over time because real-world distributions change. Two types:\n- **Data drift:** Input distribution changes (user demographics shift)\n- **Concept drift:** Relationship between inputs and outputs changes (what \"spam\" looks like evolves)\n\nSolution: Monitor predictions, set alerts, retrain periodically."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟠 Product Sense: Advanced Questions",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**\"DAU dropped 5% but revenue is up 3%. What's happening?\"**\n\n\"Fewer users are spending more each. Possible explanations:\n- Churned users were low-value (free tier, light users) — not necessarily bad\n- A price increase drove away price-sensitive users — check sustainability\n- A new premium feature engages power users but alienates casual ones\n- Seasonal user mix shift (holiday shoppers spend more per visit)\n\nI'd segment by user cohort and revenue tier to understand which users left and which are spending more.\""
+        },
+        {
+          "type": "text",
+          "content": "**\"Notifications increased DAU by 8% but also increased uninstalls by 3%. Ship it?\"**\n\n\"Depends on the math. Questions I'd ask:\n- What's the LTV of retained users vs lost users?\n- Is the DAU gain a novelty effect that will fade?\n- Are uninstallers low-value users who weren't going to monetize?\n- Run test longer — if the DAU gain fades but uninstalls persist, net is negative.\n- Can we tune notification frequency to keep most of the DAU gain with fewer uninstalls?\""
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: UNION vs UNION ALL",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**UNION** — combines results and **removes duplicates** (slower — must sort/compare).\n**UNION ALL** — combines results and **keeps everything** including duplicates (faster).\n\n**Rule:** Use UNION ALL unless you specifically need deduplication. It's significantly faster."
+        },
+        {
+          "type": "code",
+          "content": "-- Combine two event sources\nSELECT user_id, event_time, 'web' AS source FROM web_events\nUNION ALL\nSELECT user_id, event_time, 'mobile' AS source FROM mobile_events;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** When would you actually need UNION (not UNION ALL)?\n\n**Answer:** When the two tables might have overlapping rows and you want each unique row exactly once. Example: combining a \"customers who bought\" list with a \"customers who browsed\" list, and you want a unique list of all customers who did either."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: Standard Error and Sample Size",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Answer without looking:\n\n1. SE formula?\n2. You want to halve your confidence interval width. How much more data?\n3. What does CLT guarantee about sample means?\n\n**Answers:**\n1. SE = σ / √n\n2. 4× the data. Width ∝ 1/√n, so halving requires √n to double, meaning n quadruples.\n3. They approach a normal distribution regardless of the underlying data distribution, with mean = population mean and SD = σ/√n."
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "🟠 Repeat: L1 vs L2 Speed Round",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Which drives coefficients to exactly zero?\n2. Which is better when features are correlated?\n3. Can you apply either to XGBoost?\n4. You suspect 90% of your 200 features are noise. Which one?\n\n**Answers:**\n1. L1 (Lasso)\n2. L2 (Ridge) — distributes weight among correlated features\n3. No — they regularize coefficients, trees don't have coefficients\n4. L1 — it will zero out the ~180 irrelevant features"
+        }
+      ],
+      "order": 6
+    },
+    {
+      "title": "Module 12 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. BERT vs Word2Vec — key difference in one sentence?\n2. What is stationarity and how do you test for it?\n3. What is model drift? Name the two types.\n4. \"DAU down, revenue up\" — give 2 possible explanations.\n5. UNION vs UNION ALL — which is faster and why?\n6. SE = σ/√n. If n goes from 100 to 400, what happens to SE?\n\n**Answers:**\n1. BERT gives contextual embeddings (same word → different vector based on context); Word2Vec gives one fixed vector per word.\n2. Statistical properties don't change over time. Test with ADF (Augmented Dickey-Fuller). Fix with differencing.\n3. Model performance degrades as real-world data changes. Data drift (input distribution changes) and concept drift (input-output relationship changes).\n4. (a) Churned users were low-value, remaining users spend more. (b) Price increase drove away price-sensitive users.\n5. UNION ALL — no deduplication step needed, no sorting/comparing.\n6. Halves. SE = σ/√400 = σ/20 vs σ/√100 = σ/10. √n doubled, so SE halved."
+        }
+      ],
+      "order": 7
+    }
+  ],
+  "source_file": "Module-12-Terminology-Blitz.md"
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "id": "d1ef9291",
+    "module_id": "module-03",
+    "section_title": "🔷 SQL: LAG and LEAD — Comparing Rows Across Time",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "Write a query to find users whose spending THIS month is more than double their LAST month's spending.",
+    "answer": "",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "959f9cd0",
+    "module_id": "module-03",
+    "section_title": "🔶 Pandas: transform() vs apply() vs agg()",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "You want to add a column showing what percentage of their department's total salary each employee represents. Which function?",
+    "answer": "`transform()`:",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "21957074",
+    "module_id": "module-03",
+    "section_title": "🟢 Stats: The Key Distributions",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "Average 3 emails per hour (Poisson). What's the variance? What distribution describes time between emails?",
+    "answer": "Variance = 3 (Poisson: mean = variance). Time between emails is Exponential with λ=3, so mean wait = 1/3 hour = 20 minutes.",
+    "source": "auto"
+  },
+  {
+    "id": "0b2e706c",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does `LAG(revenue) OVER (ORDER BY month)` return for the first row?",
+    "answer": "NULL — there's no previous row to look back at.",
+    "source": "auto"
+  },
+  {
+    "id": "252ccd2d",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "`transform()` vs `agg()` — which changes the number of rows?",
+    "answer": "`agg()` reduces rows (one per group). `transform()` keeps the same number of rows.",
+    "source": "auto"
+  },
+  {
+    "id": "5627b882",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Poisson distribution: mean = 7. What's the variance?",
+    "answer": "7 — Poisson's mean equals its variance.",
+    "source": "auto"
+  },
+  {
+    "id": "4644c508",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does GAME stand for?",
+    "answer": "Goal, Actions, Metrics, Evaluate.",
+    "source": "auto"
+  },
+  {
+    "id": "a029b63c",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's a guardrail metric and why does it matter?",
+    "answer": "A metric that must NOT degrade while optimizing the primary metric. Catches unintended consequences (e.g., pushing engagement but increasing spam).",
+    "source": "auto"
+  },
+  {
+    "id": "65eaeb18",
+    "module_id": "module-03",
+    "section_title": "Module 03 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Write CASE WHEN to compute a conversion rate from events with types 'view' and 'purchase'.",
+    "answer": "`ROUND(100.0 * SUM(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN event_type = 'view' THEN 1 ELSE 0 END), 0), 2) AS conversion_rate`",
+    "source": "auto"
+  }
+]

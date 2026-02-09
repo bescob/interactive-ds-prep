@@ -1,0 +1,135 @@
+{
+  "id": "module-11",
+  "title": "Estimation & Deep Learning Basics",
+  "number": 11,
+  "subtitle": "Topics: Fermi estimation, DL basics (when asked), Pandas memory optimization, Coupon collector, Star schema",
+  "sections": [
+    {
+      "title": "🟠 Product Sense: Fermi Estimation",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "These test structured thinking, not exact numbers."
+        },
+        {
+          "type": "text",
+          "content": "**The framework**\n1. **Clarify scope:** Define what you're estimating\n2. **Break into components:** Multiplication chain of estimable pieces\n3. **Estimate each component:** Round numbers are fine\n4. **Sanity check:** Does the result feel reasonable?"
+        },
+        {
+          "type": "text",
+          "content": "**Worked example: \"How many Uber rides happen in Chicago per day?\"**\n\n**Approach 1 (demand-side):**\n- Chicago metro: ~9.5M people\n- Maybe 10% use ride-sharing monthly: 950K\n- Average ride-share user: ~4 rides/month ÷ 30 days ≈ 0.13/day\n- 950K × 0.13 ≈ **~125K rides/day**\n\n**Approach 2 (supply-side):**\n- Estimate ~30K active drivers in Chicago\n- Each driver does ~8-10 rides per shift\n- Maybe 60% are active on a given day: 18K\n- 18K × 9 ≈ **~160K rides/day**\n\nTwo approaches giving roughly similar answers → confidence we're in the right ballpark.\n\n**Practice these on your own:**\n- How many text messages are sent in the US per day?\n- How much revenue does a single Starbucks generate per year?\n- How many data scientists are there in Chicago?"
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟣 Terminology: Deep Learning (When They Ask)",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Neural Networks**\nLayers of connected nodes. Data flows through layers; weights are adjusted via backpropagation to minimize loss. \"Deep\" = many layers."
+        },
+        {
+          "type": "text",
+          "content": "**CNN (Convolutional Neural Networks)**\nFor spatial data (images). Learnable filters slide across input detecting patterns: edges → textures → objects. Parameter sharing makes them efficient."
+        },
+        {
+          "type": "text",
+          "content": "**RNN / LSTM**\nFor sequential data. RNNs maintain hidden state but suffer from vanishing gradients (forget long sequences). LSTMs add gating to selectively remember/forget."
+        },
+        {
+          "type": "text",
+          "content": "**Transformers**\nProcess entire sequences in parallel via self-attention (each element attends to all others). Much faster than RNNs. Foundation of BERT, GPT."
+        },
+        {
+          "type": "text",
+          "content": "**The key interview answer**\n\n**\"When do you use deep learning vs gradient boosting?\"**\n\nFor **tabular data** (most DS work): gradient-boosted trees almost always win. Faster to train, more interpretable, needs less data.\n\nFor **unstructured data** (images, text, audio): deep learning wins. Feature engineering is impractical — let the network learn features."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🔶 Pandas: Memory Optimization",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "# Check current memory\ndf.info(memory_usage='deep')\n\n# 1. Categorical columns (low cardinality strings → massive savings)\ndf['status'] = df['status'].astype('category')  # 'active','inactive' repeated 1M times\n\n# 2. Downcast numerics\ndf['age'] = pd.to_numeric(df['age'], downcast='integer')  # int64 → int8 if values fit\n\n# 3. Float64 → Float32 (halves memory)\nfloat_cols = df.select_dtypes(include=['float64']).columns\ndf[float_cols] = df[float_cols].astype('float32')\n\n# 4. Load only needed columns\ndf = pd.read_csv('big.csv', usecols=['col1', 'col2', 'col3'])",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** A column has 2 million rows but only 5 unique string values. How do you reduce its memory?\n\n**Answer:** `df['col'] = df['col'].astype('category')` — stores 5 unique values + integer codes instead of 2M full strings. Can reduce memory 95%+."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟢 Stats: Coupon Collector Problem (Meta Favorite)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "\"Expected rolls to see all 6 sides of a fair die?\"\n\nWhen you've seen k sides, P(new side) = (6-k)/6. Expected rolls for that stage = 6/(6-k)."
+        },
+        {
+          "type": "code",
+          "content": "E = 6/6 + 6/5 + 6/4 + 6/3 + 6/2 + 6/1\n  = 1 + 1.2 + 1.5 + 2 + 3 + 6\n  = 14.7 rolls"
+        },
+        {
+          "type": "text",
+          "content": "**Generalized:** For n types: E = n × (1 + 1/2 + 1/3 + ... + 1/n) = n × Hₙ (harmonic number)"
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🟣 Terminology: Star Schema",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "A data warehouse design pattern:\n- Central **fact table** = events/transactions (order_id, customer_id, product_id, date_id, amount)\n- Surrounding **dimension tables** = descriptive context (customers, products, dates, stores)\n\n**Why it works for analytics:** Queries join the fact table to whichever dimensions they need. Simple, predictable, fast."
+        },
+        {
+          "type": "code",
+          "content": "          [dim_customer]\n               |\n[dim_date] — [fact_sales] — [dim_product]\n               |\n          [dim_store]"
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: Bayes' Theorem — Final Boss",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Do this one cold. No formula lookup.\n\n\"A factory has two machines. Machine A produces 60% of items and has a 2% defect rate. Machine B produces 40% and has a 5% defect rate. A randomly chosen item is defective. What's the probability it came from Machine A?\"\n\n**Work it out, then check.**\n\n**Answer:**"
+        },
+        {
+          "type": "code",
+          "content": "P(A|Defective) = P(Def|A) × P(A) / [P(Def|A) × P(A) + P(Def|B) × P(B)]\n               = (0.02 × 0.60) / (0.02 × 0.60 + 0.05 × 0.40)\n               = 0.012 / (0.012 + 0.020)\n               = 0.012 / 0.032\n               = 0.375 → 37.5%"
+        },
+        {
+          "type": "text",
+          "content": "Even though Machine A makes more items, its lower defect rate means a defective item is more likely from Machine B (62.5%)."
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Module 11 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Walk through a Fermi estimate for \"How many pizza deliveries happen in Chicago per day?\"\n2. Tabular data: deep learning or gradient boosting? Why?\n3. How does converting a string column to category type save memory?\n4. Expected rolls to see all 6 die faces?\n5. What's a star schema? Name the two types of tables.\n6. Bayes — a defective item from a two-machine factory. Can you set up the formula without looking?\n\n**Answers:**\n1. ~2.8M population in city proper. Maybe 20% order pizza weekly = 560K orders/week ÷ 7 = ~80K/day. Of those, maybe 60% delivery = ~48K. Sanity check: there are ~2,000 pizza places × ~25 deliveries/day ≈ 50K. ✓\n2. Gradient boosting — faster, more interpretable, needs less data, usually outperforms DL on tabular data.\n3. Stores unique values once + integer codes per row, instead of full string per row. For 2M rows with 5 unique values, goes from storing 2M strings to 5 strings + 2M tiny integers.\n4. 14.7 rolls. E = 6(1 + 1/2 + 1/3 + 1/4 + 1/5 + 1/6).\n5. Central fact table (transactions/events) surrounded by dimension tables (who, what, where, when). Optimized for analytical queries with simple, predictable joins.\n6. P(A|Def) = P(Def|A)×P(A) / [P(Def|A)×P(A) + P(Def|B)×P(B)]"
+        }
+      ],
+      "order": 6
+    }
+  ],
+  "source_file": "Module-11-Estimation-DL.md"
+}

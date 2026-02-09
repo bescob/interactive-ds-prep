@@ -1,0 +1,72 @@
+[
+  {
+    "id": "72245d3e",
+    "module_id": "module-05",
+    "section_title": "🟠 ML: The Bias-Variance Tradeoff",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "Your model gets 95% train accuracy and 72% test accuracy. What's the problem and what do you try first?",
+    "answer": "Overfitting (high variance) — 23% gap between train and test. Try: more training data, add regularization (L1/L2), reduce model complexity, or use dropout if neural net.",
+    "source": "auto"
+  },
+  {
+    "id": "c72ac4a3",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Your model has high BOTH train and test error. Diagnosis and fix?",
+    "answer": "Underfitting (high bias). Fix: more complex model, add features, reduce regularization.",
+    "source": "auto"
+  },
+  {
+    "id": "e6357f4f",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "RF reduces ___. XGBoost reduces ___.",
+    "answer": "RF reduces variance. XGBoost reduces bias.",
+    "source": "auto"
+  },
+  {
+    "id": "fdddb224",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Write a 3-day rolling average window clause.",
+    "answer": "`AVG(x) OVER (ORDER BY date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)`",
+    "source": "auto"
+  },
+  {
+    "id": "8d839081",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why should you switch in Monty Hall?",
+    "answer": "Initial pick = 1/3. The remaining door inherits the full 2/3 after the host reveals a goat.",
+    "source": "auto"
+  },
+  {
+    "id": "2add5774",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Expected value of rolling a fair die?",
+    "answer": "3.5",
+    "source": "auto"
+  },
+  {
+    "id": "afe91602",
+    "module_id": "module-05",
+    "section_title": "Module 05 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "How many people for >50% shared birthday probability?",
+    "answer": "23 people.",
+    "source": "auto"
+  }
+]

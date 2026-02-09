@@ -1,0 +1,123 @@
+{
+  "id": "module-01",
+  "title": "Warm Up",
+  "number": 1,
+  "subtitle": "Topics: SQL basics, Python basics, Probability rules, Key terminology",
+  "sections": [
+    {
+      "title": "🔷 SQL: How Queries Actually Execute",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "You write `SELECT ... FROM ... WHERE ...` but SQL runs them in a totally different order:"
+        },
+        {
+          "type": "code",
+          "content": "FROM → JOIN → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY → LIMIT"
+        },
+        {
+          "type": "text",
+          "content": "**Why this matters:** You can't reference a column alias from SELECT in your WHERE clause — WHERE runs first. You can't filter a window function in WHERE — it's computed during SELECT. This execution order explains 90% of \"why doesn't this query work?\" moments.\n\n**Quick quiz — no peeking:**\nWhat happens if you write `WHERE total_sales > 100` and `total_sales` is an alias from `SELECT SUM(sales) AS total_sales`?\n\n**Answer:** It fails. WHERE runs before SELECT, so the alias doesn't exist yet. Use HAVING instead (runs after GROUP BY/aggregation)."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🔶 Python: The Core Data Structures",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**List** `[1, 2, 3]` — ordered, mutable, allows duplicates.\n**Tuple** `(1, 2, 3)` — ordered, **immutable**, allows duplicates. Faster than lists, usable as dict keys.\n**Set** `{1, 2, 3}` — unordered, mutable, **no duplicates**. Membership check is O(1) vs O(n) for lists.\n**Dict** `{'key': 'val'}` — key-value pairs, ordered (Python 3.7+), O(1) lookup.\n\n**The interview trick:** \"Remove duplicates from a list while preserving order?\""
+        },
+        {
+          "type": "code",
+          "content": "list(dict.fromkeys(my_list))  # Dict preserves insertion order, rejects dup keys",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** Which data structure would you use if you need to check whether an item exists in a collection of 10 million elements, and why?\n\n**Answer:** A `set`. Lookup is O(1) via hashing, vs O(n) for a list scanning every element."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟢 Stats: The Three Probability Rules",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Everything in probability comes from three rules:\n\n**Addition (OR):** P(A or B) = P(A) + P(B) - P(A and B)\nIf mutually exclusive: P(A or B) = P(A) + P(B)\n\n**Multiplication (AND):** P(A and B) = P(A) × P(B|A)\nIf independent: P(A and B) = P(A) × P(B)\n\n**Complement (NOT):** P(not A) = 1 - P(A)\nUseful trick: \"probability of at least one\" = 1 - P(none)\n\n**Quick quiz:** You roll two dice. What's P(at least one 6)?\n\n**Answer:** 1 - P(no sixes) = 1 - (5/6 × 5/6) = 1 - 25/36 = **11/36 ≈ 0.306**"
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟣 Terminology: ETL and Data Storage",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**ETL** = Extract, Transform, Load. The pipeline for moving data into an analytics system.\n- Extract: pull raw data from databases, APIs, logs\n- Transform: clean, validate, restructure, aggregate\n- Load: write into the target (warehouse)\n\nModern twist: **ELT** — load raw first, transform inside the warehouse. Cheaper storage makes this viable.\n\n**Data Warehouse** = structured, processed data, optimized for analytical queries (Snowflake, BigQuery, Redshift). Think \"organized library.\"\n\n**Data Lake** = raw data in ANY format at any scale (S3, Azure Data Lake). Think \"dump everything, organize later.\" Risk: becomes a \"data swamp\" without governance.\n\n**Quick quiz:** Your company stores raw JSON logs from 50 different services. Where does this go — warehouse or lake?\n\n**Answer:** Data lake — it's raw, mixed-format data. After ETL/ELT processing, the cleaned structured version goes into the warehouse for analysis."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: JOINs Refresher",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**INNER JOIN** — only matching rows from both tables survive.\n**LEFT JOIN** — ALL left table rows survive. Non-matching right columns become NULL.\n**FULL OUTER JOIN** — all rows from both sides. NULLs fill gaps.\n**CROSS JOIN** — every row × every row (cartesian product). Usually accidental.\n\n**The anti-join pattern** (find things with NO match):"
+        },
+        {
+          "type": "code",
+          "content": "SELECT c.customer_id\nFROM customers c\nLEFT JOIN orders o ON c.customer_id = o.customer_id\nWHERE o.order_id IS NULL;  -- Customers who never ordered",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** You INNER JOIN a table of 100 customers with a table of 80 orders. Can you get more than 100 rows?\n\n**Answer:** Yes! If a customer has multiple orders, they appear once per order. INNER JOIN produces one row per match, not per left-side row."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Stats: What's a Conditional Probability?",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "P(A|B) means \"probability of A, given B already happened.\"\n\nP(A|B) = P(A and B) / P(B)\n\n**Example:** Deck of cards. P(King | Face card)?\n- P(King AND Face card) = 4/52 (all Kings are face cards)\n- P(Face card) = 12/52\n- P(King | Face card) = (4/52) / (12/52) = 4/12 = **1/3**\n\nThis concept is the building block for Bayes' theorem, which we'll hit in Module 02."
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "🟠 Behavioral: The STAR Framework",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Every behavioral answer uses this structure:\n\n| Part | Time | What to do |\n|---|---|---|\n| **S**ituation | 20% (~30s) | Set the scene briefly |\n| **T**ask | 10% (~15s) | YOUR specific responsibility |\n| **A**ction | 60% (~90s) | What YOU did (say \"I\" not \"we\") |\n| **R**esult | 10% (~15s) | Quantified outcome |\n\n**Homework:** Think of ONE specific project where you used data to influence a decision. Write down the S, T, A, R in 2-3 sentences each. You'll need this story in multiple interviews."
+        }
+      ],
+      "order": 6
+    },
+    {
+      "title": "Module 01 Self-Test (cover answers, try first)",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. What's the SQL execution order?\n2. Why is set lookup O(1) but list lookup O(n)?\n3. P(A or B) when A and B are NOT mutually exclusive?\n4. What does ETL stand for?\n5. How do you find customers with no orders using SQL?\n6. What does STAR stand for?\n\n**Answers:**\n1. FROM → JOIN → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY → LIMIT\n2. Sets use hash tables (compute hash, jump to bucket). Lists scan every element sequentially.\n3. P(A) + P(B) - P(A and B) — subtract the overlap to avoid double-counting.\n4. Extract, Transform, Load.\n5. LEFT JOIN customers to orders, then WHERE orders.id IS NULL.\n6. Situation, Task, Action, Result."
+        }
+      ],
+      "order": 7
+    }
+  ],
+  "source_file": "Module-01-Warm-Up.md"
+}

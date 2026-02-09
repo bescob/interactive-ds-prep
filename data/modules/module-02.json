@@ -1,0 +1,127 @@
+{
+  "id": "module-02",
+  "title": "First Contact",
+  "number": 2,
+  "subtitle": "Topics: SQL window functions, Pandas groupby/merge, Bayes' theorem, OLAP vs OLTP",
+  "sections": [
+    {
+      "title": "🔷 SQL: Window Functions — The #1 Interview Topic",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Window functions compute a value for each row using OTHER rows, **without collapsing the table** like GROUP BY. Think \"add a column that knows about its neighbors.\"\n\n**Syntax:** `FUNCTION() OVER (PARTITION BY ... ORDER BY ...)`\n- PARTITION BY = restart calculation per group (like GROUP BY but keeps all rows)\n- ORDER BY = what order the window sees rows in"
+        },
+        {
+          "type": "text",
+          "content": "**The three ranking functions**\n\nGiven sales values: 100, 100, 90, 80:\n\n| Function | Output | How it handles ties |\n|---|---|---|\n| `ROW_NUMBER()` | 1, 2, 3, 4 | Always unique, ties get arbitrary order |\n| `RANK()` | 1, 1, 3, 4 | Same rank for ties, **skips** next |\n| `DENSE_RANK()` | 1, 1, 2, 3 | Same rank for ties, **no skip** |\n\n**When to use which:**\n- `ROW_NUMBER()` — need exactly N rows per group\n- `RANK()` — ties share rank, gaps okay (sports standings)\n- `DENSE_RANK()` — ties share rank, no gaps (\"second highest salary\")\n\n**Quick quiz:** You need the second-highest salary per department. Which ranking function and why?\n\n**Answer:** `DENSE_RANK()`. If two people tie for #1, RANK would make the next person #3 (skipping #2). DENSE_RANK gives the next person #2, which is what \"second highest\" means."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🔶 Pandas: GroupBy and Merge",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**merge() — SQL-style joins in Pandas**"
+        },
+        {
+          "type": "code",
+          "content": "# Inner join on a column\npd.merge(df1, df2, on='customer_id', how='inner')\n\n# Left join with different column names\npd.merge(df1, df2, left_on='id', right_on='cust_id', how='left')\n\n# Debug joins with indicator\npd.merge(df1, df2, on='id', how='left', indicator=True)\n# Adds _merge column: 'left_only', 'right_only', 'both'",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**groupby() basics**"
+        },
+        {
+          "type": "code",
+          "content": "# Single aggregation\ndf.groupby('department')['salary'].mean()\n\n# Multiple aggregations\ndf.groupby('department').agg(\n    avg_salary=('salary', 'mean'),\n    headcount=('employee_id', 'count'),\n    max_salary=('salary', 'max')\n)",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** You want to find customers in df1 that do NOT exist in df2. How?\n\n**Answer:**"
+        },
+        {
+          "type": "code",
+          "content": "merged = pd.merge(df1, df2, on='customer_id', how='left', indicator=True)\nonly_in_df1 = merged[merged['_merge'] == 'left_only']",
+          "language": "python"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟢 Stats: Bayes' Theorem — The Most Asked Probability Topic",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Bayes lets you **flip a conditional probability.** You know P(B|A), you want P(A|B)."
+        },
+        {
+          "type": "code",
+          "content": "P(A|B) = P(B|A) × P(A) / [P(B|A) × P(A) + P(B|¬A) × P(¬A)]"
+        },
+        {
+          "type": "text",
+          "content": "**The classic interview question**\n\n\"1 in 1,000 people have a disease. A test is 98% sensitive (true positive rate) with a 1% false positive rate. Someone tests positive — probability they're actually sick?\"\n\n**Step by step:**\n- P(Disease) = 0.001\n- P(Positive | Disease) = 0.98\n- P(Positive | No Disease) = 0.01"
+        },
+        {
+          "type": "code",
+          "content": "P(Disease | Positive) = (0.98 × 0.001) / (0.98 × 0.001 + 0.01 × 0.999)\n                      = 0.00098 / (0.00098 + 0.00999)\n                      = 0.00098 / 0.01097\n                      ≈ 0.089 → about 8.9%"
+        },
+        {
+          "type": "text",
+          "content": "**Why so low?** The disease is so rare that even a 1% false positive rate applied to 999 healthy people (~10 false positives) swamps the ~1 true positive. This is called **base rate neglect** — most people guess 98% because they ignore how rare the disease is.\n\n**The follow-up:** \"How would you make this test useful?\"\n→ Re-test positives with a more specific second test, or only test high-risk populations where the base rate is higher."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟣 Terminology: OLAP vs OLTP",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**OLTP (Online Transaction Processing)**\n- Optimized for fast individual transactions: INSERT, UPDATE, DELETE one row\n- Row-based storage\n- Used by applications (checkout page, banking transfer)\n- Think: \"cash register\"\n\n**OLAP (Online Analytical Processing)**\n- Optimized for complex queries: aggregate millions of rows, GROUP BY, JOINs\n- Columnar storage (reads only needed columns → faster for analytics)\n- Used by analysts, dashboards, BI tools\n- Think: \"business intelligence\"\n\n**Quick quiz:** Your e-commerce app writes 10,000 orders per minute. Your analytics team runs daily reports aggregating all orders. Same database?\n\n**Answer:** No — use OLTP for the app (fast writes) and replicate to an OLAP warehouse for analytics (fast reads/aggregations). Running heavy analytical queries on the production OLTP database would slow down the app."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: The CTE Pattern (and why you need it)",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "A CTE (Common Table Expression) is a named temporary result you define with `WITH`. You NEED CTEs because you **cannot filter window functions in WHERE.**"
+        },
+        {
+          "type": "code",
+          "content": "-- \"Top 2 products by spending per category\"\nWITH ranked AS (\n  SELECT category, product, SUM(spend) AS total_spend,\n    RANK() OVER (PARTITION BY category ORDER BY SUM(spend) DESC) AS ranking\n  FROM product_spend\n  GROUP BY category, product\n)\nSELECT category, product, total_spend\nFROM ranked\nWHERE ranking <= 2;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Why the CTE is mandatory:** Window functions compute during SELECT. WHERE runs before SELECT. So you can't write `WHERE RANK() OVER (...) <= 2`. The CTE computes the rank first, then the outer query filters on it."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "Module 02 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. What's the difference between RANK() and DENSE_RANK() for values [50, 50, 40]?\n2. In Pandas, what does `indicator=True` add to a merge?\n3. Work through Bayes: disease rate 1/500, test sensitivity 95%, false positive rate 2%. Someone tests positive — what's the probability they're sick? (Do the math.)\n4. OLTP vs OLAP — which uses columnar storage and why?\n5. Why can't you filter a window function directly in WHERE?\n\n**Answers:**\n1. RANK: 1, 1, 3 (skips 2). DENSE_RANK: 1, 1, 2 (no skip).\n2. A `_merge` column with values 'left_only', 'right_only', or 'both' — shows which rows matched.\n3. P = (0.95 × 0.002) / (0.95 × 0.002 + 0.02 × 0.998) = 0.0019 / (0.0019 + 0.01996) = 0.0019 / 0.02186 ≈ **8.7%**\n4. OLAP uses columnar storage because analytical queries typically read few columns across many rows — columnar means you only load the columns you need.\n5. WHERE executes before SELECT, and window functions are computed during SELECT. Need a CTE/subquery to filter."
+        }
+      ],
+      "order": 5
+    }
+  ],
+  "source_file": "Module-02-First-Contact.md"
+}

@@ -1,0 +1,112 @@
+{
+  "id": "module-09",
+  "title": "Cross-Validation & Product Metrics",
+  "number": 9,
+  "subtitle": "Topics: Cross-validation, Decision trees, Product metric design, Python decorators, SQL date manipulation",
+  "sections": [
+    {
+      "title": "🟠 ML: Cross-Validation",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "A single train/test split is noisy — results depend on WHICH data ended up where. Cross-validation averages over multiple splits.\n\n**K-fold CV:** Split into k parts. Train on k-1, validate on 1. Repeat k times. Average the k scores. Typical k = 5 or 10.\n\n**Stratified k-fold:** Each fold has the same class distribution as the full dataset. **Critical for imbalanced data.**"
+        },
+        {
+          "type": "text",
+          "content": "**When NOT to use standard k-fold**\n\n**Time series:** Random splitting uses future data to predict the past. Use **walk-forward validation:** train on months 1-6, test on 7; train on 1-7, test on 8; etc.\n\n**Grouped data:** Multiple measurements per patient → all measurements from one patient must stay in the same fold. Use `GroupKFold`.\n\n**Quick quiz:** You're predicting daily stock prices. Can you use standard 5-fold CV?\n\n**Answer:** No — time series data has temporal dependencies. Random folds would leak future information into training. Use walk-forward or time-series split."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟠 ML: Decision Trees — The Intuitive Model",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**What they do:** Repeatedly split data on feature thresholds that best separate the target. Like playing 20 questions.\n\n**How splits are chosen:**\n- Classification: minimize **Gini impurity** = 1 - Σ(pᵢ²) where pᵢ = class proportion. Gini=0 → pure, Gini=0.5 → maximum impurity (binary).\n- Regression: minimize variance/MSE in each resulting group.\n\n**Pros:** Interpretable, handles nonlinear relationships, no scaling needed, handles mixed types.\n**Cons:** Overfits easily, unstable (small data change → different tree), biased toward features with more levels.\n\nThis is WHY Random Forest and boosting exist — they address the instability and overfitting of single trees.\n\n**Quick quiz:** Your decision tree has 100% training accuracy. Good or bad?\n\n**Answer:** Bad — almost certainly overfitting. An unconstrained tree can memorize every training example by creating a leaf for each one. Regularize with max_depth, min_samples_leaf."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟠 Product Sense: Metric Design",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**North Star metrics (memorize a few)**\n\n| Company | North Star |\n|---|---|\n| Facebook | Daily active users |\n| Airbnb | Nights booked |\n| Spotify | Time spent listening |\n| Slack | Messages sent per user per day |\n| Uber | Rides completed |"
+        },
+        {
+          "type": "text",
+          "content": "**The counter-metric test**\n\nFor ANY proposed metric, ask: \"What happens if someone games this?\"\n- \"Clicks\" → people click but immediately bounce (meaningless)\n- \"Time spent\" → people are frustrated and can't find what they need\n- \"Messages sent\" → spam bots inflate numbers\n\nThis is why you need **guardrail metrics** — they catch when a win on one dimension creates a loss elsewhere."
+        },
+        {
+          "type": "text",
+          "content": "**Vanity vs actionable metrics**\n\n**Vanity:** total registered users, total page views, total downloads. Only go up. Tell you nothing about health.\n\n**Actionable:** DAU/MAU ratio (stickiness), retention rate (d1/d7/d30), revenue per user, conversion rate.\n\n**Quick quiz:** \"Total app downloads reached 50 million!\" Is this a good success metric?\n\n**Answer:** No — it's a vanity metric. It only goes up and says nothing about engagement. Many downloaded apps are never opened. Better: DAU, d7 retention, or MAU with an engagement threshold."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🔶 Python: Decorators",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "A decorator wraps a function to add behavior without modifying it."
+        },
+        {
+          "type": "code",
+          "content": "import time\n\ndef timer(func):\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        print(f\"{func.__name__} took {time.time()-start:.2f}s\")\n        return result\n    return wrapper\n\n@timer  # Same as: process_data = timer(process_data)\ndef process_data(df):\n    return df.groupby('category').sum()",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**What `@timer` actually does:** Replaces `process_data` with `wrapper`, which calls the original function but adds timing around it.\n\n**Common decorators you've seen:**\n- `@staticmethod`, `@classmethod` — modify method behavior\n- `@property` — make a method accessible like an attribute\n- `@functools.lru_cache` — memoize function results"
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: Date Manipulation Cheat Sheet",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "DATE_TRUNC('month', date)         -- 2024-03-15 → 2024-03-01\nEXTRACT(MONTH FROM date)          -- 2024-03-15 → 3\nEXTRACT(DOW FROM date)            -- 0=Sunday, 6=Saturday (PostgreSQL)\ndate + INTERVAL '1 day'           -- Add time\nDATEDIFF('day', start, end)       -- Days between (Snowflake/Redshift)\nAGE(end_date, start_date)         -- PostgreSQL interval\nDATE_PART('year', date)           -- Extract year as number",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** Write a query to get the first day of each user's signup month.\n\n**Answer:** `SELECT user_id, DATE_TRUNC('month', signup_date) AS signup_month FROM users`"
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: Classification Metrics (Can You Still Explain?)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Fill in the blanks without looking:\n\n1. Precision = TP / (TP + ___)\n2. Recall = TP / (TP + ___)\n3. Use precision when ___ are costly.\n4. Use recall when ___ are costly.\n5. For imbalanced data, use ___ instead of ROC-AUC.\n\n**Answers:**\n1. FP\n2. FN\n3. False positives (flagging innocent things)\n4. False negatives (missing real positives)\n5. PR-AUC (Precision-Recall AUC)"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Module 09 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Why can't you use standard k-fold CV on time series data?\n2. What is Gini impurity? What value means maximum impurity for binary classification?\n3. Name 3 North Star metrics for 3 different companies.\n4. What does a Python decorator actually do mechanically?\n5. `DATE_TRUNC('month', '2024-07-18')` returns what?\n6. Your decision tree has 100% train accuracy and 60% test accuracy. Diagnose.\n\n**Answers:**\n1. Random splits leak future data into training, violating temporal order. Use walk-forward/time-series split.\n2. Gini = 1 - Σ(pᵢ²). For binary: max impurity = 0.5 (50/50 class split).\n3. Facebook: DAU. Airbnb: nights booked. Spotify: time listening. Slack: messages/user/day. Uber: rides completed.\n4. It replaces the original function with a wrapper function that calls the original but adds behavior (logging, timing, caching, etc.).\n5. 2024-07-01 (first day of the month).\n6. Overfitting — 40% gap between train and test. Regularize: increase min_samples_leaf, decrease max_depth, or switch to Random Forest/boosting."
+        }
+      ],
+      "order": 6
+    }
+  ],
+  "source_file": "Module-09-CrossVal-ProductMetrics.md"
+}

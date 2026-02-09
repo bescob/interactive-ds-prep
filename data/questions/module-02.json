@@ -1,0 +1,84 @@
+[
+  {
+    "id": "5a25fe23",
+    "module_id": "module-02",
+    "section_title": "🔷 SQL: Window Functions — The #1 Interview Topic",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "You need the second-highest salary per department. Which ranking function and why?",
+    "answer": "`DENSE_RANK()`. If two people tie for #1, RANK would make the next person #3 (skipping #2). DENSE_RANK gives the next person #2, which is what \"second highest\" means.",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "3ea7ba5b",
+    "module_id": "module-02",
+    "section_title": "🔶 Pandas: GroupBy and Merge",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "You want to find customers in df1 that do NOT exist in df2. How?",
+    "answer": "",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "e402a41b",
+    "module_id": "module-02",
+    "section_title": "🟣 Terminology: OLAP vs OLTP",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "Your e-commerce app writes 10,000 orders per minute. Your analytics team runs daily reports aggregating all orders. Same database?",
+    "answer": "No — use OLTP for the app (fast writes) and replicate to an OLAP warehouse for analytics (fast reads/aggregations). Running heavy analytical queries on the production OLTP database would slow down the app.",
+    "source": "auto"
+  },
+  {
+    "id": "f3f1235f",
+    "module_id": "module-02",
+    "section_title": "Module 02 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's the difference between RANK() and DENSE_RANK() for values [50, 50, 40]?",
+    "answer": "RANK: 1, 1, 3 (skips 2). DENSE_RANK: 1, 1, 2 (no skip).",
+    "source": "auto"
+  },
+  {
+    "id": "fdd0f5e8",
+    "module_id": "module-02",
+    "section_title": "Module 02 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "In Pandas, what does `indicator=True` add to a merge?",
+    "answer": "A `_merge` column with values 'left_only', 'right_only', or 'both' — shows which rows matched.",
+    "source": "auto"
+  },
+  {
+    "id": "2613a39d",
+    "module_id": "module-02",
+    "section_title": "Module 02 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Work through Bayes: disease rate 1/500, test sensitivity 95%, false positive rate 2%. Someone tests positive — what's the probability they're sick? (Do the math.)",
+    "answer": "P = (0.95 × 0.002) / (0.95 × 0.002 + 0.02 × 0.998) = 0.0019 / (0.0019 + 0.01996) = 0.0019 / 0.02186 ≈ **8.7%**",
+    "source": "auto"
+  },
+  {
+    "id": "42db9a21",
+    "module_id": "module-02",
+    "section_title": "Module 02 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "OLTP vs OLAP — which uses columnar storage and why?",
+    "answer": "OLAP uses columnar storage because analytical queries typically read few columns across many rows — columnar means you only load the columns you need.",
+    "source": "auto"
+  },
+  {
+    "id": "faf95bf8",
+    "module_id": "module-02",
+    "section_title": "Module 02 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why can't you filter a window function directly in WHERE?",
+    "answer": "WHERE executes before SELECT, and window functions are computed during SELECT. Need a CTE/subquery to filter.",
+    "source": "auto"
+  }
+]

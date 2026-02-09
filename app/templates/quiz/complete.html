@@ -1,0 +1,23 @@
+<div class="quiz-complete">
+    <div class="completion-icon">&#10003;</div>
+    <h2>Quiz Complete!</h2>
+    <p>You finished all {{ total }} questions.</p>
+    <div class="completion-stats">
+        <div class="stat-card">
+            <span class="stat-value">{{ progress.total_attempted }}</span>
+            <span class="stat-label">Total Attempted</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ progress.total_correct }}</span>
+            <span class="stat-label">Total Correct</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ progress.daily_streak }}</span>
+            <span class="stat-label">Day Streak</span>
+        </div>
+    </div>
+    <div class="completion-actions">
+        <a href="/" class="btn btn-primary">Back to Dashboard</a>
+        <a href="/random" class="btn btn-secondary">Random Questions</a>
+    </div>
+</div>

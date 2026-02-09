@@ -1,0 +1,82 @@
+[
+  {
+    "id": "d9a61f40",
+    "module_id": "module-08",
+    "section_title": "🟠 ML: Handling Imbalanced Data",
+    "category": "ml",
+    "question_type": "free_text",
+    "prompt": "Your interviewer asks: \"Why not just oversample the minority class by duplicating rows?\"",
+    "answer": "Simple duplication doesn't add new information — the model just sees the same examples multiple times, which can lead to overfitting on those exact examples. SMOTE is better because it creates NEW synthetic points between existing minority samples, adding diversity. But even SMOTE can create unrealistic samples if the feature space is sparse.",
+    "source": "auto"
+  },
+  {
+    "id": "197f922d",
+    "module_id": "module-08",
+    "section_title": "🟣 Terminology: CAP Theorem and MapReduce",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "You're building a real-time fraud detector. CP or AP system? Why?",
+    "answer": "CP — you need consistency. A payment system can't serve stale data about account balances or fraud flags. It's better to briefly reject a transaction during a network partition than to approve a fraudulent one based on outdated info.",
+    "source": "auto"
+  },
+  {
+    "id": "a5ea9a6e",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why is accuracy bad for imbalanced data? What metric do you use instead?",
+    "answer": "Predicting majority class always = high accuracy, zero usefulness. Use F1, PR-AUC, or recall depending on cost of false positives vs false negatives.",
+    "source": "auto"
+  },
+  {
+    "id": "33f9cbba",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is SMOTE and what's the critical rule for using it?",
+    "answer": "Creates synthetic minority samples by interpolating between existing ones. ONLY apply to training data — never test/validation (data leakage).",
+    "source": "auto"
+  },
+  {
+    "id": "48375f83",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Explain the consecutive-days SQL trick in your own words.",
+    "answer": "Subtracting an incrementing row number from consecutive dates produces the same group value. Non-consecutive dates produce different values, creating separate groups you can count.",
+    "source": "auto"
+  },
+  {
+    "id": "268d6f6d",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "When do you use pivot_table vs melt in Pandas?",
+    "answer": "Pivot: aggregate + reshape to see a metric across two dimensions. Melt: convert column headers into row values (wide → long format).",
+    "source": "auto"
+  },
+  {
+    "id": "2d508b3d",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "CAP theorem: what do the three letters stand for?",
+    "answer": "Consistency, Availability, Partition tolerance.",
+    "source": "auto"
+  },
+  {
+    "id": "0624d4a9",
+    "module_id": "module-08",
+    "section_title": "Module 08 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "p = 0.08 at α = 0.05. Is the null hypothesis true?",
+    "answer": "No — \"fail to reject H₀\" ≠ \"H₀ is true.\" It means insufficient evidence at this sample size.",
+    "source": "auto"
+  }
+]

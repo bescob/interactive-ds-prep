@@ -1,0 +1,132 @@
+[
+  {
+    "id": "bab105c9",
+    "module_id": "module-01",
+    "section_title": "🔷 SQL: How Queries Actually Execute",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "What happens if you write `WHERE total_sales > 100` and `total_sales` is an alias from `SELECT SUM(sales) AS total_sales`?",
+    "answer": "It fails. WHERE runs before SELECT, so the alias doesn't exist yet. Use HAVING instead (runs after GROUP BY/aggregation).",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "901cb346",
+    "module_id": "module-01",
+    "section_title": "🔶 Python: The Core Data Structures",
+    "category": "python",
+    "question_type": "code_practice",
+    "prompt": "Which data structure would you use if you need to check whether an item exists in a collection of 10 million elements, and why?",
+    "answer": "A `set`. Lookup is O(1) via hashing, vs O(n) for a list scanning every element.",
+    "source": "auto",
+    "code_language": "python"
+  },
+  {
+    "id": "269f49bc",
+    "module_id": "module-01",
+    "section_title": "🟢 Stats: The Three Probability Rules",
+    "category": "stats",
+    "question_type": "free_text",
+    "prompt": "You roll two dice. What's P(at least one 6)?",
+    "answer": "1 - P(no sixes) = 1 - (5/6 × 5/6) = 1 - 25/36 = **11/36 ≈ 0.306**",
+    "source": "auto"
+  },
+  {
+    "id": "488db3cc",
+    "module_id": "module-01",
+    "section_title": "🟣 Terminology: ETL and Data Storage",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "Your company stores raw JSON logs from 50 different services. Where does this go — warehouse or lake?",
+    "answer": "Data lake — it's raw, mixed-format data. After ETL/ELT processing, the cleaned structured version goes into the warehouse for analysis.",
+    "source": "auto"
+  },
+  {
+    "id": "955ff6b4",
+    "module_id": "module-01",
+    "section_title": "🔷 SQL: JOINs Refresher",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "You INNER JOIN a table of 100 customers with a table of 80 orders. Can you get more than 100 rows?",
+    "answer": "Yes! If a customer has multiple orders, they appear once per order. INNER JOIN produces one row per match, not per left-side row.",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "2b1a9a05",
+    "module_id": "module-01",
+    "section_title": "🟠 Behavioral: The STAR Framework",
+    "category": "behavioral",
+    "question_type": "star_practice",
+    "prompt": " Think of ONE specific project where you used data to influence a decision. Write down the S, T, A, R in 2-3 sentences each. You'll need this story in multiple interviews.",
+    "answer": "Use the STAR framework: Situation, Task, Action, Result. Keep under 2 minutes.",
+    "source": "auto",
+    "rubric": [
+      "Used \"I\" not \"we\"",
+      "Quantified the result",
+      "Kept under 2 minutes",
+      "Clear situation/context",
+      "Specific actions taken"
+    ]
+  },
+  {
+    "id": "bbfab159",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What's the SQL execution order?",
+    "answer": "FROM → JOIN → WHERE → GROUP BY → HAVING → SELECT → DISTINCT → ORDER BY → LIMIT",
+    "source": "auto"
+  },
+  {
+    "id": "fff8ea8e",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "Why is set lookup O(1) but list lookup O(n)?",
+    "answer": "Sets use hash tables (compute hash, jump to bucket). Lists scan every element sequentially.",
+    "source": "auto"
+  },
+  {
+    "id": "4f0c0ca1",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "P(A or B) when A and B are NOT mutually exclusive?",
+    "answer": "P(A) + P(B) - P(A and B) — subtract the overlap to avoid double-counting.",
+    "source": "auto"
+  },
+  {
+    "id": "7a7f425d",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does ETL stand for?",
+    "answer": "Extract, Transform, Load.",
+    "source": "auto"
+  },
+  {
+    "id": "5cd23ab3",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "How do you find customers with no orders using SQL?",
+    "answer": "LEFT JOIN customers to orders, then WHERE orders.id IS NULL.",
+    "source": "auto"
+  },
+  {
+    "id": "86c776d2",
+    "module_id": "module-01",
+    "section_title": "Module 01 Self-Test (cover answers, try first)",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What does STAR stand for?",
+    "answer": "Situation, Task, Action, Result.",
+    "source": "auto"
+  }
+]

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Module {{ '%02d' % module.number }}: {{ module.title }}{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Dashboard</a> &raquo; Module {{ '%02d' % module.number }}
+</div>
+
+<div class="module-header">
+    <h1>Module {{ '%02d' % module.number }}: {{ module.title }}</h1>
+    <p class="subtitle">{{ module.subtitle }}</p>
+    <div class="progress-bar-container large">
+        <div class="progress-bar" style="width: {{ progress.completion_pct }}%"></div>
+        <span class="progress-text">{{ progress.completion_pct }}% complete</span>
+    </div>
+</div>
+
+<div class="section-list">
+    {% for section in module.sections %}
+    <a href="/module/{{ module.id }}/section/{{ loop.index0 }}" class="section-card {% if loop.index0 in progress.sections_viewed %}viewed{% endif %}">
+        <div class="section-card-left">
+            <span class="section-number">{{ loop.index }}</span>
+            <div>
+                <h3>{{ section.title }}</h3>
+                <span class="category-tag cat-{{ section.category }}">{{ section.category }}</span>
+            </div>
+        </div>
+        <div class="section-card-right">
+            {% if loop.index0 in progress.sections_viewed %}
+            <span class="check-mark">&#10003;</span>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="module-action-bar">
+    <a href="/module/{{ module.id }}/quiz" class="btn btn-primary btn-lg">Start Quiz ({{ questions|length }} questions)</a>
+    <a href="/module/{{ module.id }}/flashcards" class="btn btn-secondary btn-lg">Flashcards</a>
+</div>
+{% endblock %}

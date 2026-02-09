@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ section.title }}{% endblock %}
+{% block content %}
+<div class="breadcrumb">
+    <a href="/">Dashboard</a> &raquo;
+    <a href="/module/{{ module.id }}">Module {{ '%02d' % module.number }}</a> &raquo;
+    Section {{ section_idx + 1 }}
+</div>
+
+<article class="study-content">
+    <header class="section-header">
+        <span class="category-tag cat-{{ section.category }}">{{ section.category }}</span>
+        <h1>{{ section.title }}</h1>
+    </header>
+
+    <div class="content-blocks">
+        {% for block in blocks %}
+        {% if block.type == 'html' %}
+        <div class="text-block">{{ block.content|safe }}</div>
+        {% elif block.type == 'code' %}
+        <pre><code class="language-{{ block.language }}">{{ block.content }}</code></pre>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if questions %}
+    <div class="inline-quiz-section">
+        <h3>Practice Questions</h3>
+        {% for q in questions %}
+        <div class="inline-quiz" id="quiz-{{ q.id }}">
+            <div class="quiz-prompt">
+                <strong>Q:</strong> {{ q.prompt|md_inline }}
+            </div>
+            <button class="btn btn-secondary btn-sm reveal-btn"
+                    onclick="this.nextElementSibling.classList.toggle('hidden'); this.textContent = this.textContent === 'Show Answer' ? 'Hide Answer' : 'Show Answer'">
+                Show Answer
+            </button>
+            <div class="quiz-answer hidden">
+                <strong>A:</strong> {{ q.answer|md_inline }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</article>
+
+<nav class="section-nav">
+    {% if prev_idx is not none %}
+    <a href="/module/{{ module.id }}/section/{{ prev_idx }}" class="btn btn-ghost">&larr; Previous</a>
+    {% else %}
+    <span></span>
+    {% endif %}
+    <a href="/module/{{ module.id }}" class="btn btn-ghost">Overview</a>
+    {% if next_idx is not none %}
+    <a href="/module/{{ module.id }}/section/{{ next_idx }}" class="btn btn-ghost">Next &rarr;</a>
+    {% else %}
+    <a href="/module/{{ module.id }}/quiz" class="btn btn-primary">Start Quiz &rarr;</a>
+    {% endif %}
+</nav>
+{% endblock %}

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "9db687ad",
+    "module_id": "module-12",
+    "section_title": "🟣 Terminology: NLP Basics",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "What's the key advantage of BERT over Word2Vec?",
+    "answer": "BERT produces contextual embeddings — the same word gets different representations depending on surrounding words. Word2Vec gives each word a single fixed vector regardless of context.",
+    "source": "auto"
+  },
+  {
+    "id": "de3b54a6",
+    "module_id": "module-12",
+    "section_title": "🟣 Terminology: Time Series Concepts",
+    "category": "terminology",
+    "question_type": "free_text",
+    "prompt": "A time series of daily ice cream sales has an upward slope and spikes every summer. Name the two components.",
+    "answer": "Trend (upward slope) and seasonality (annual summer spikes).",
+    "source": "auto"
+  },
+  {
+    "id": "86ce182c",
+    "module_id": "module-12",
+    "section_title": "🔷 SQL: UNION vs UNION ALL",
+    "category": "sql",
+    "question_type": "code_practice",
+    "prompt": "When would you actually need UNION (not UNION ALL)?",
+    "answer": "When the two tables might have overlapping rows and you want each unique row exactly once. Example: combining a \"customers who bought\" list with a \"customers who browsed\" list, and you want a unique list of all customers who did either.",
+    "source": "auto",
+    "code_language": "sql"
+  },
+  {
+    "id": "a63531ae",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "BERT vs Word2Vec — key difference in one sentence?",
+    "answer": "BERT gives contextual embeddings (same word → different vector based on context); Word2Vec gives one fixed vector per word.",
+    "source": "auto"
+  },
+  {
+    "id": "8df3df59",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is stationarity and how do you test for it?",
+    "answer": "Statistical properties don't change over time. Test with ADF (Augmented Dickey-Fuller). Fix with differencing.",
+    "source": "auto"
+  },
+  {
+    "id": "94ca78b4",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "What is model drift? Name the two types.",
+    "answer": "Model performance degrades as real-world data changes. Data drift (input distribution changes) and concept drift (input-output relationship changes).",
+    "source": "auto"
+  },
+  {
+    "id": "75b59c51",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "\"DAU down, revenue up\" — give 2 possible explanations.",
+    "answer": "(a) Churned users were low-value, remaining users spend more. (b) Price increase drove away price-sensitive users.",
+    "source": "auto"
+  },
+  {
+    "id": "7f09dce4",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "UNION vs UNION ALL — which is faster and why?",
+    "answer": "UNION ALL — no deduplication step needed, no sorting/comparing.",
+    "source": "auto"
+  },
+  {
+    "id": "e081a0e8",
+    "module_id": "module-12",
+    "section_title": "Module 12 Self-Test",
+    "category": "general",
+    "question_type": "free_text",
+    "prompt": "SE = σ/√n. If n goes from 100 to 400, what happens to SE?",
+    "answer": "Halves. SE = σ/√400 = σ/20 vs σ/√100 = σ/10. √n doubled, so SE halved.",
+    "source": "auto"
+  }
+]

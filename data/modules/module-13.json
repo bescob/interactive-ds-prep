@@ -1,0 +1,124 @@
+{
+  "id": "module-13",
+  "title": "Chicago Company Prep & Mixed Review",
+  "number": 13,
+  "subtitle": "Topics: Chicago interview patterns, PCA, SQL HAVING vs WHERE, Python `if __name__`, Behavioral collaboration story",
+  "sections": [
+    {
+      "title": "🏙️ Chicago Interview Differences",
+      "category": "product",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Chicago DS interviews are NOT FAANG interviews. Key differences:\n\n**17% more modeling questions** — they want to know you understand the algorithms, not just call `.fit()`.\n\n**Domain knowledge matters.** Discover wants credit risk intuition. AbbVie wants clinical trial awareness. McDonald's wants supply chain thinking. United wants demand forecasting context.\n\n**Take-home assignments are standard.** United gives 48hrs (intentionally open-ended). Grubhub gives 72hrs. Allstate has a transportation company case study.\n\n**STAR behavioral is used rigidly.** Allstate starts with 10 automated behavioral questions recorded by phone. AbbVie and Caterpillar use strict STAR rubrics.\n\n**Communication > algorithmic puzzles.** Explaining technical work to non-technical stakeholders is tested explicitly."
+        },
+        {
+          "type": "text",
+          "content": "**Company Quick-Hits**\n\n| Company | Key Focus | Watch Out |\n|---|---|---|\n| Discover | SQL (Snowflake), credit risk, statistics | Learn QUALIFY clause |\n| Allstate | ML math (imbalanced data, CV, logistic internals) | Automated phone behavioral first |\n| United | Strategic thinking over technical depth | Very slow process (3+ months) |\n| McDonald's | SQL + Python + cultural fit | 5-6 rounds, ~2 months |\n| AbbVie | Logistic regression + clinical trial context | Must explain analytics to pharma stakeholders |\n| CME Group | Financial derivatives domain knowledge | Brain teasers common |\n| Morningstar | NLP, transformers, AI | Extremely slow (7+ months reported) |\n\n**Your edge:** SWE background at Meta + D.Eng is rare in the Chicago market. Most candidates come from analytics or academia. Lean into your ability to build end-to-end systems."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟠 ML: PCA in Simple Terms",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**What it does:** Finds new axes (principal components) that capture the most variance. The first component captures the most, the second captures the most remaining variance perpendicular to the first, and so on.\n\n**Keep only the top k components** → reduce dimensions while retaining most information.\n\n**It's a rotation + projection, not feature selection.** Each component is a LINEAR COMBINATION of original features, not a single feature.\n\n**When to use:** High-dimensional data where features are correlated (100 survey questions → 5 underlying factors). Also for visualization (reduce to 2D/3D).\n\n**Quick quiz:** You have 200 features. After PCA, the first 15 components explain 95% of variance. What do you do?\n\n**Answer:** Keep 15 components, drop the rest. You've reduced from 200 to 15 dimensions while retaining 95% of the information. The remaining 185 components mostly capture noise."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🔷 SQL: WHERE vs HAVING — Once and For All",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**WHERE** filters **individual rows** BEFORE grouping.\n**HAVING** filters **groups** AFTER aggregation."
+        },
+        {
+          "type": "code",
+          "content": "-- WHERE: filter rows before grouping\nSELECT department, AVG(salary) AS avg_salary\nFROM employees\nWHERE hire_date > '2020-01-01'     -- Only recent hires (row-level)\nGROUP BY department\nHAVING AVG(salary) > 80000;        -- Only departments with high avg (group-level)",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**The rule:** If it involves an aggregate function (COUNT, SUM, AVG, MAX, MIN), it goes in HAVING. If it filters individual column values, it goes in WHERE.\n\n**Quick quiz:** \"Find departments with more than 10 employees who earn over $50K.\""
+        },
+        {
+          "type": "code",
+          "content": "SELECT department, COUNT(*) AS high_earners\nFROM employees\nWHERE salary > 50000           -- Row filter: only high earners\nGROUP BY department\nHAVING COUNT(*) > 10;          -- Group filter: departments with 10+ of them",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "Both WHERE and HAVING in the same query — WHERE narrows the rows first, HAVING filters the groups after."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🔶 Python: `if __name__ == '__main__'`",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "if __name__ == '__main__':\n    main()",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**What it does:** Checks if the file is being run directly (not imported).\n\n- Run `python script.py` → `__name__` is `'__main__'` → code inside executes\n- Another file does `import script` → `__name__` is `'script'` → code inside is SKIPPED\n\n**Why it exists:** So you can write a module that's both importable (other files use its functions) AND runnable as a standalone script."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🟠 Behavioral: The \"Cross-Functional Collaboration\" Story",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Chicago companies emphasize this heavily — they want proof you can work with non-DS teams.\n\n**Template:**\n- **S:** \"I worked with [engineering/product/business team] on [project].\"\n- **T:** \"My role was to [provide the data/analytical perspective].\"\n- **A:** \"I [specific collaboration: translated requirements, built shared dashboards, presented findings in accessible terms, iterated based on their feedback].\"\n- **R:** \"[Outcome] — and the process established a [repeatable workflow/better relationship].\"\n\n**The key phrase interviewers want to hear:** \"I translated the technical findings into business terms\" or \"I met with stakeholders to understand their actual decision, then shaped the analysis around that.\""
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: A/B Test Design",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Without looking, list the 7 steps of designing an A/B test:\n\n**Try it, then check.**\n\n**Answer:**\n1. Define hypothesis\n2. Pick metrics (primary, secondary, guardrail)\n3. Calculate sample size (n ≈ 16σ²/δ²)\n4. Set duration (≥2 weeks)\n5. Randomize by user (hash user ID)\n6. Analyze at predetermined end date (no peeking)\n7. Check statistical AND practical significance"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "🟠 Repeat: Bias-Variance Diagnostic",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "| You see... | It's... | You do... |\n|---|---|---|\n| Both train and test error high | High bias (underfitting) | More complex model, add features |\n| Low train, high test error | High variance (overfitting) | More data, regularize, simplify |\n| Both low and close | Just right | Ship it |"
+        }
+      ],
+      "order": 6
+    },
+    {
+      "title": "Module 13 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Name 2 ways Chicago DS interviews differ from FAANG.\n2. What is PCA? Is it feature selection?\n3. WHERE vs HAVING: which filters groups after aggregation?\n4. What does `if __name__ == '__main__'` do?\n5. Recite the A/B test design steps from memory.\n6. Your SWE background — how is this an advantage for Chicago DS roles?\n\n**Answers:**\n1. More modeling questions (less LeetCode), domain knowledge heavily weighted, take-home assignments standard, rigid STAR behavioral.\n2. PCA finds new axes (principal components) that capture maximum variance, then keeps the top k. It's NOT feature selection — each component is a linear combination of ALL original features.\n3. HAVING — WHERE filters individual rows before grouping.\n4. Checks if the script is run directly (executes the code) vs imported as a module (skips the code).\n5. (1) Hypothesis (2) Metrics (primary/secondary/guardrail) (3) Sample size (4) Duration ≥2 weeks (5) Randomize by user (6) Analyze at end date — no peeking (7) Statistical + practical significance.\n6. Most Chicago DS candidates come from analytics/academia. Your ability to build end-to-end systems (pipelines, deployment, production code) is rare and highly valued. Lean into this in every behavioral."
+        }
+      ],
+      "order": 7
+    }
+  ],
+  "source_file": "Module-13-Chicago-Prep.md"
+}

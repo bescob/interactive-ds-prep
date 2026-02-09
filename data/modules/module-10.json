@@ -1,0 +1,117 @@
+{
+  "id": "module-10",
+  "title": "CLT, Confidence Intervals, Advanced SQL",
+  "number": 10,
+  "subtitle": "Topics: CLT, Confidence intervals, SQL anti-join + EXISTS, Gradient descent, Batch vs streaming",
+  "sections": [
+    {
+      "title": "🟢 Stats: Central Limit Theorem — The Foundation of Everything",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**What it says:** Take many random samples of size n from ANY distribution. The distribution of sample means will be approximately normal, with:\n- Mean = population mean\n- Standard deviation = σ/√n (called **standard error**)\n\n**Why it matters:** This is why normal distribution-based tests (z-test, t-test, confidence intervals) work even when the underlying data isn't normal. As long as n ≥ ~30, CLT kicks in.\n\n**The √n factor:** Larger samples → smaller standard error → narrower CI → more precise. But it's √n, not n. **Quadrupling sample size only halves uncertainty.**\n\n**Quick quiz:** You sample 100 customer wait times. Mean = 5 min, SD = 3 min. What's the standard error of the mean?\n\n**Answer:** SE = σ/√n = 3/√100 = 3/10 = **0.3 minutes.** Even though individual wait times vary widely (SD=3), the mean of 100 observations is estimated with much more precision."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟢 Stats: Confidence Intervals — What They Really Mean",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "CI = x̄ ± z × (σ/√n)"
+        },
+        {
+          "type": "text",
+          "content": "z-values: 90% → 1.645, **95% → 1.96**, 99% → 2.576\n\n**What 95% CI means:** \"If we repeated this experiment 100 times, about 95 of the resulting intervals would contain the true population parameter.\"\n\n**What it does NOT mean:** \"There's a 95% probability the true value is in this interval.\" The true value is fixed — it either is or isn't. The confidence is about the *procedure.*\n\n**For proportions:** CI = p̂ ± z × √[p̂(1-p̂)/n]\n\n**Quick quiz:** Sample mean = 50, SD = 12, n = 36. What's the 95% CI?\n\n**Answer:** SE = 12/√36 = 2. CI = 50 ± 1.96 × 2 = 50 ± 3.92 = **(46.08, 53.92)**"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🔷 SQL: Anti-Join Patterns and EXISTS",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Method 1: LEFT JOIN + IS NULL**"
+        },
+        {
+          "type": "code",
+          "content": "SELECT p.page_id\nFROM pages p\nLEFT JOIN page_likes pl ON p.page_id = pl.page_id\nWHERE pl.page_id IS NULL;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Method 2: NOT EXISTS (often faster)**"
+        },
+        {
+          "type": "code",
+          "content": "SELECT page_id FROM pages p\nWHERE NOT EXISTS (\n  SELECT 1 FROM page_likes pl WHERE pl.page_id = p.page_id\n);",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**EXISTS vs IN**\n\n**EXISTS** — checks if any row exists, stops at first match. Efficient for correlated subqueries.\n**IN** — checks against a list. Simpler for small static lists.\n\n**Rule of thumb:** EXISTS for large tables with correlated subqueries. IN for small, static value lists."
+        },
+        {
+          "type": "text",
+          "content": "**Correlated subquery (know this term)**\nA subquery that references the outer query, so it re-executes per row:"
+        },
+        {
+          "type": "code",
+          "content": "-- Employees earning above their department average\nSELECT name, salary, department\nFROM employees e\nWHERE salary > (\n  SELECT AVG(salary) FROM employees WHERE department = e.department\n);",
+          "language": "sql"
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟠 ML: Gradient Descent",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**What it is:** An optimization algorithm that iteratively adjusts parameters to minimize the loss function.\n\n**Intuition:** You're on a hilly landscape in fog. You can only feel the slope beneath your feet. You take a step downhill. Repeat until you reach the bottom.\n\n**Learning rate:**\n- Too high → overshoot the minimum, bounce around, diverge\n- Too low → converge very slowly, might get stuck in local minimum\n- Just right → smooth convergence\n\n**Variants:**\n- **Batch:** Use ALL data per step — stable but slow\n- **Stochastic (SGD):** Use ONE random sample — fast but noisy\n- **Mini-batch:** Use a subset (e.g., 32-256 samples) — best of both worlds, standard in practice\n\n**Quick quiz:** \"What IS a loss function?\" (Explain simply.)\n\n**Answer:** A measure of how wrong the model's predictions are. Lower = better. MSE for regression (average squared error), log loss for classification (penalizes confident wrong predictions heavily). Gradient descent minimizes this function."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🟣 Terminology: Batch vs Streaming Processing",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Batch:** Process accumulated data at scheduled intervals.\n- When: reports, model training, ETL jobs\n- Tools: Spark, Hadoop, Airflow\n- Latency: minutes to hours\n\n**Streaming:** Process data in real-time as it arrives.\n- When: fraud detection, live dashboards, recommendation updates\n- Tools: Kafka, Flink, Spark Streaming\n- Latency: milliseconds to seconds\n\n**Quick quiz:** You're building a dashboard that shows the CEO daily revenue summaries. Batch or streaming?\n\n**Answer:** Batch — daily summaries don't need real-time processing. Run a daily ETL job overnight. Reserve streaming for things that need sub-second response (fraud detection, live pricing)."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Repeat: Window Functions Speed Round",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Without looking, write the window clause for:\n\n1. Rank employees by salary within each department (no gaps for ties)\n2. Get the previous month's revenue\n3. Running total of sales ordered by date\n\n**Answers:**\n1. `DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC)`\n2. `LAG(revenue) OVER (ORDER BY month)`\n3. `SUM(sales) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)`"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Module 10 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. State the CLT in one sentence.\n2. Sample mean = 100, SD = 20, n = 64. What's the 95% CI?\n3. What does a 95% confidence interval ACTUALLY mean?\n4. EXISTS vs IN — when do you use each?\n5. What is a correlated subquery?\n6. Learning rate too high → what happens? Too low?\n7. Batch vs streaming — which for a real-time fraud alert system?\n\n**Answers:**\n1. Regardless of the underlying distribution, sample means approach a normal distribution as sample size increases, with mean = population mean and SD = σ/√n.\n2. SE = 20/√64 = 2.5. CI = 100 ± 1.96 × 2.5 = 100 ± 4.9 = **(95.1, 104.9)**\n3. If you repeated the experiment 100 times, ~95 of the resulting intervals would contain the true value. NOT \"95% probability the true value is in this interval.\"\n4. EXISTS for large tables/correlated subqueries (stops at first match). IN for small static value lists.\n5. A subquery that references the outer query, re-executing for each outer row.\n6. Too high → overshoots, oscillates, may diverge. Too low → very slow convergence.\n7. Streaming — fraud detection needs millisecond response times."
+        }
+      ],
+      "order": 6
+    }
+  ],
+  "source_file": "Module-10-CLT-ConfIntervals.md"
+}

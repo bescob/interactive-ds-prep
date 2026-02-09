@@ -1,0 +1,170 @@
+{
+  "id": "module-03",
+  "title": "Pattern Builder",
+  "number": 3,
+  "subtitle": "Topics: SQL LAG/LEAD, Pandas transform vs apply, Distributions, Product sense GAME framework",
+  "sections": [
+    {
+      "title": "🔷 SQL: LAG and LEAD — Comparing Rows Across Time",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "`LAG(column, N)` = look N rows **back**. `LEAD(column, N)` = look N rows **forward**."
+        },
+        {
+          "type": "code",
+          "content": "-- Month-over-month revenue growth\nWITH monthly AS (\n  SELECT DATE_TRUNC('month', order_date) AS month, SUM(amount) AS revenue\n  FROM orders GROUP BY 1\n)\nSELECT month, revenue,\n  LAG(revenue) OVER (ORDER BY month) AS prev_month,\n  ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY month))\n    / NULLIF(LAG(revenue) OVER (ORDER BY month), 0), 2) AS growth_pct\nFROM monthly;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Two gotchas here:**\n- `100.0` forces decimal division (integer `100` would silently round to 0)\n- `NULLIF(x, 0)` returns NULL instead of dividing by zero (first month has no LAG)\n\n**Quick quiz:** Write a query to find users whose spending THIS month is more than double their LAST month's spending.\n\n**Answer:**"
+        },
+        {
+          "type": "code",
+          "content": "WITH monthly_spend AS (\n  SELECT user_id, DATE_TRUNC('month', txn_date) AS month, SUM(amount) AS spend\n  FROM transactions GROUP BY 1, 2\n)\nSELECT user_id, month, spend,\n  LAG(spend) OVER (PARTITION BY user_id ORDER BY month) AS prev_spend\nFROM monthly_spend\n-- Wrap in another CTE or subquery to filter:\n-- WHERE spend > 2 * prev_spend",
+          "language": "sql"
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🔶 Pandas: transform() vs apply() vs agg()",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "This is the trickiest Pandas question. The key distinction:\n\n**agg()** → returns ONE row per group (like GROUP BY in SQL)"
+        },
+        {
+          "type": "code",
+          "content": "df.groupby('dept')['salary'].agg('mean')\n# dept A → 75000\n# dept B → 82000",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**transform()** → returns SAME number of rows (broadcasts group result back)"
+        },
+        {
+          "type": "code",
+          "content": "df.groupby('dept')['salary'].transform('mean')\n# [75000, 75000, 75000, 82000, 82000, ...]  (one per original row)",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**apply()** → flexible but slow, can return anything\n\n**When to use transform:** When you want a group-level stat as a new column WITHOUT losing rows."
+        },
+        {
+          "type": "code",
+          "content": "# THE classic interview pattern: employees above their department's average\ndf[df['salary'] > df.groupby('dept')['salary'].transform('mean')]",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** You want to add a column showing what percentage of their department's total salary each employee represents. Which function?\n\n**Answer:** `transform()`:"
+        },
+        {
+          "type": "code",
+          "content": "df['pct_of_dept'] = df['salary'] / df.groupby('dept')['salary'].transform('sum')",
+          "language": "python"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟢 Stats: The Key Distributions",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Normal Distribution**\n- Bell-shaped, symmetric, defined by mean (μ) and std dev (σ)\n- **68-95-99.7 rule:** 68% within ±1σ, 95% within ±2σ, 99.7% within ±3σ\n- Central Limit Theorem makes this universal — sample means are always ~normal"
+        },
+        {
+          "type": "text",
+          "content": "**Binomial Distribution**\n- Count of successes in n independent trials, each with probability p\n- Mean = np, Variance = np(1-p)\n- \"Out of 100 users, how many click if click rate is 5%?\" → Binomial(100, 0.05), mean = 5"
+        },
+        {
+          "type": "text",
+          "content": "**Poisson Distribution**\n- Count of events in a fixed interval\n- Mean = λ, Variance = λ **(they're equal!)**\n- \"How many support calls per hour?\" — if mean = 4, variance = 4 too\n- Tip: if you see a count distribution where mean ≈ variance, it's likely Poisson"
+        },
+        {
+          "type": "text",
+          "content": "**Exponential Distribution**\n- Time BETWEEN events (complement of Poisson)\n- Mean = 1/λ\n- **Memoryless:** how long you've waited doesn't affect how much longer you'll wait\n- \"How long until the next customer arrives?\"\n\n**Quick quiz:** Average 3 emails per hour (Poisson). What's the variance? What distribution describes time between emails?\n\n**Answer:** Variance = 3 (Poisson: mean = variance). Time between emails is Exponential with λ=3, so mean wait = 1/3 hour = 20 minutes."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟠 Product Sense: The GAME Framework",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "For \"How would you measure X?\" questions — use GAME:\n\n**G — Goal:** What business objective? (Don't jump to metrics — clarify first)\n**A — Actions:** What user actions lead to the goal? Map the user journey.\n**M — Metrics:** Define three types:\n  - **Primary (North Star):** THE one metric for the goal\n  - **Secondary:** Context and deeper understanding\n  - **Guardrail:** Must NOT degrade (user experience, safety)\n**E — Evaluate:** Tradeoffs, measurement challenges, what you'd act on."
+        },
+        {
+          "type": "text",
+          "content": "**Practice: \"How would you measure the success of Uber Eats adding a grocery delivery feature?\"**\n\n**G:** Expand Uber Eats beyond restaurants to increase total orders and revenue.\n**A:** User opens app → browses grocery section → adds items to cart → completes order → receives delivery → reorders.\n**M:**\n  - Primary: Weekly grocery orders per active user\n  - Secondary: Grocery basket size, grocery → restaurant cross-usage, time to delivery\n  - Guardrail: Restaurant order volume (shouldn't cannibalize), delivery quality ratings, driver earnings\n**E:** If grocery orders rise but restaurant orders drop equally, we're just shifting revenue. If drivers prefer grocery runs, restaurant wait times could increase. Track whether grocery brings in NEW users or just gives existing users another option."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: Conditional Aggregation (CASE WHEN)",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Replace multiple queries with one:"
+        },
+        {
+          "type": "code",
+          "content": "-- Click-through rate per app\nSELECT app_id,\n  ROUND(100.0 *\n    SUM(CASE WHEN event_type = 'click' THEN 1 ELSE 0 END) /\n    NULLIF(SUM(CASE WHEN event_type = 'impression' THEN 1 ELSE 0 END), 0)\n  , 2) AS ctr\nFROM events\nGROUP BY app_id;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**Also useful for pivoting:**"
+        },
+        {
+          "type": "code",
+          "content": "SELECT user_id,\n  SUM(CASE WHEN platform = 'ios' THEN sessions ELSE 0 END) AS ios_sessions,\n  SUM(CASE WHEN platform = 'android' THEN sessions ELSE 0 END) AS android_sessions\nFROM user_activity\nGROUP BY user_id;",
+          "language": "sql"
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟢 Bayes' Theorem — Round 2 (Repetition)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Can you still do this without looking? Try it:\n\n\"0.5% of transactions are fraudulent. A fraud detector has 99% sensitivity and 3% false positive rate. A transaction is flagged. What's the probability it's actually fraud?\"\n\n**Work it out before reading the answer.**\n\n**Answer:**"
+        },
+        {
+          "type": "code",
+          "content": "P(Fraud|Flagged) = (0.99 × 0.005) / (0.99 × 0.005 + 0.03 × 0.995)\n                 = 0.00495 / (0.00495 + 0.02985)\n                 = 0.00495 / 0.0348\n                 ≈ 14.2%"
+        },
+        {
+          "type": "text",
+          "content": "Even with 99% sensitivity, most flags are false positives because fraud is rare."
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Module 03 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. What does `LAG(revenue) OVER (ORDER BY month)` return for the first row?\n2. `transform()` vs `agg()` — which changes the number of rows?\n3. Poisson distribution: mean = 7. What's the variance?\n4. What does GAME stand for?\n5. What's a guardrail metric and why does it matter?\n6. Write CASE WHEN to compute a conversion rate from events with types 'view' and 'purchase'.\n\n**Answers:**\n1. NULL — there's no previous row to look back at.\n2. `agg()` reduces rows (one per group). `transform()` keeps the same number of rows.\n3. 7 — Poisson's mean equals its variance.\n4. Goal, Actions, Metrics, Evaluate.\n5. A metric that must NOT degrade while optimizing the primary metric. Catches unintended consequences (e.g., pushing engagement but increasing spam).\n6. `ROUND(100.0 * SUM(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN event_type = 'view' THEN 1 ELSE 0 END), 0), 2) AS conversion_rate`"
+        }
+      ],
+      "order": 6
+    }
+  ],
+  "source_file": "Module-03-Pattern-Builder.md"
+}

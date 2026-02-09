@@ -1,0 +1,138 @@
+{
+  "id": "module-14",
+  "title": "Final Boss Review",
+  "number": 14,
+  "subtitle": "",
+  "sections": [
+    {
+      "title": "Round 1: Speed Definitions (30 seconds each)",
+      "category": "terminology",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**1. What does ETL stand for?**\nExtract, Transform, Load.\n\n**2. OLAP vs OLTP in one sentence each?**\nOLTP: fast individual transactions (app backend). OLAP: complex analytical queries across millions of rows (BI/dashboards).\n\n**3. What is the CAP theorem?**\nDistributed systems can guarantee at most 2 of 3: Consistency, Availability, Partition tolerance. Since partitions happen, you choose CP or AP.\n\n**4. Batch vs streaming?**\nBatch: process data on a schedule (reports, ETL). Streaming: process in real-time as it arrives (fraud, live dashboards).\n\n**5. What is a feature store?**\nCentralized system for storing/serving ML features, ensuring consistency between training and production."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "Round 2: SQL (Write the Query)",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**6.** Top 3 highest-spending customers. Just write it."
+        },
+        {
+          "type": "code",
+          "content": "SELECT customer_id, SUM(amount) AS total_spend\nFROM orders\nGROUP BY customer_id\nORDER BY total_spend DESC\nLIMIT 3;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**7.** Second highest salary per department."
+        },
+        {
+          "type": "code",
+          "content": "WITH ranked AS (\n  SELECT department, employee, salary,\n    DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk\n  FROM employees\n)\nSELECT * FROM ranked WHERE rnk = 2;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**8.** Month-over-month growth rate."
+        },
+        {
+          "type": "code",
+          "content": "WITH monthly AS (\n  SELECT DATE_TRUNC('month', order_date) AS month, SUM(revenue) AS rev\n  FROM orders GROUP BY 1\n)\nSELECT month, rev,\n  ROUND(100.0 * (rev - LAG(rev) OVER (ORDER BY month))\n    / NULLIF(LAG(rev) OVER (ORDER BY month), 0), 2) AS growth_pct\nFROM monthly;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**9.** Users who exist in signups but never made a purchase."
+        },
+        {
+          "type": "code",
+          "content": "SELECT s.user_id\nFROM signups s\nLEFT JOIN purchases p ON s.user_id = p.user_id\nWHERE p.user_id IS NULL;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**10.** Click-through rate: clicks / impressions per campaign."
+        },
+        {
+          "type": "code",
+          "content": "SELECT campaign_id,\n  ROUND(100.0 *\n    SUM(CASE WHEN event = 'click' THEN 1 ELSE 0 END) /\n    NULLIF(SUM(CASE WHEN event = 'impression' THEN 1 ELSE 0 END), 0)\n  , 2) AS ctr\nFROM events GROUP BY campaign_id;",
+          "language": "sql"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "Round 3: Stats & Probability (Explain It)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**11. State Bayes' theorem and work through: 1% disease rate, 95% sensitivity, 3% false positive. Person tests positive.**\n\nP(D|+) = (0.95 × 0.01) / (0.95 × 0.01 + 0.03 × 0.99) = 0.0095 / (0.0095 + 0.0297) = 0.0095 / 0.0392 ≈ **24.2%**\n\n**12. What does p = 0.04 mean?**\nIf H₀ were true (no effect), there's only a 4% chance of observing data this extreme. At α=0.05, we reject H₀.\n\n**13. Type I vs Type II?**\nType I (α) = false positive, crying wolf. Type II (β) = false negative, missing the wolf. Power = 1-β ≥ 0.80.\n\n**14. Why always switch in Monty Hall?**\nInitial pick = 1/3. Other two doors = 2/3. Host reveals one is wrong, remaining door gets the full 2/3. Switching = 2/3 win rate.\n\n**15. 95% confidence interval: what does it ACTUALLY mean?**\nIf you repeated the experiment 100 times, ~95 of the intervals would contain the true value. NOT \"95% probability the true value is in this specific interval.\""
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "Round 4: ML (Explain the Tradeoff)",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**16. Bias-variance: your model has 97% train accuracy, 68% test accuracy.**\nOverfitting (high variance). Big gap. Fix: more data, regularize, simplify, dropout.\n\n**17. L1 vs L2: 300 features, you think ~20 matter.**\nL1 (Lasso) — drives irrelevant features to exactly zero. Built-in feature selection.\n\n**18. RF vs XGBoost: you have noisy data and 1 hour before deadline.**\nRandom Forest — good defaults, resistant to noise, hard to screw up. XGBoost needs tuning.\n\n**19. You built a fraud model with 99.5% accuracy. Your manager is impressed. Should you be?**\nNo — if fraud is 0.5% of transactions, predicting \"not fraud\" always = 99.5% accuracy. Check precision, recall, F1, PR-AUC.\n\n**20. Can you apply L1/L2 to Random Forest?**\nNo. L1/L2 regularize coefficients. Trees have none. Trees regularize via max_depth, min_samples_leaf, etc."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "Round 5: Python/Pandas (What's Wrong?)",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**21. What's wrong with:** `df[df['x'] > 5]['y'] = 10`\nChained indexing — may modify a copy. Fix: `df.loc[df['x'] > 5, 'y'] = 10`\n\n**22. You need each employee's department average as a new column.** `agg()`, `transform()`, or `apply()`?\n`transform()` — keeps the same number of rows.\n\n**23. `df.loc[0:3]` returns how many rows?**\n4 rows (labels 0, 1, 2, 3 — loc is inclusive on both ends).\n\n**24. Why is NumPy faster than Python lists?**\nContiguous memory (cache-friendly), homogeneous types (no per-element type checking), vectorized C operations (no Python loop overhead). 10-100x faster.\n\n**25. List vs generator for 10M items?**\nGenerator — O(1) memory (yields one at a time) vs O(n) memory for list (stores all at once)."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "Round 6: Product Sense (Structure Your Answer)",
+      "category": "product",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**26. \"How would you measure success of a search feature?\" Use GAME.**\n- G: Reduce time to find what users want, increase actions from search\n- A: Type query → see results → click result → complete action\n- M: Primary — search-to-action conversion. Secondary — zero-result rate, avg result position clicked. Guardrail — page load time, user satisfaction\n- E: High clicks but low conversions = results look relevant but aren't. Track post-click behavior.\n\n**27. \"Revenue dropped 15% this quarter.\" First 3 things you do.**\n(1) Clarify: vs last quarter or YoY? All segments? (2) Decompose: Revenue = Users × Conversion × AOV — which dropped? (3) Check internal (deployments, bugs, logging changes) before external (seasonality, competitors).\n\n**28. Estimate: How many data scientists work in Chicago?**\n~5,000 companies with 500+ employees in Chicago. Maybe 30% have DS teams averaging ~5 DS each. 1,500 × 5 = ~7,500. Plus smaller companies and consultancies → maybe ~10-12K. (Rough but defensible.)"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "Round 7: Behavioral (Say These Out Loud)",
+      "category": "behavioral",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**29. \"Tell me about a time you used data to influence a decision.\"** (2 min)\n*Use your prepared STAR story. Time yourself.*\n\n**30. \"Describe a failed project.\"** (2 min)\n*Own it. Show learning. End on what you do differently now.*\n\n**31. \"How do you explain a model to a non-technical stakeholder?\"** (1 min)\n*Focus on: no jargon, use visualization/analogy, tie to business outcome.*"
+        }
+      ],
+      "order": 6
+    },
+    {
+      "title": "The Final Checklist",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Before your interview, can you:\n\n- [ ] Write a top-N-per-group query with a window function and CTE?\n- [ ] Calculate Bayes' theorem for a new scenario from scratch?\n- [ ] Explain what a p-value IS and IS NOT?\n- [ ] Name 3 A/B testing pitfalls and fixes?\n- [ ] Explain bias-variance tradeoff with a diagnosis for each scenario?\n- [ ] Say when to use L1 vs L2 and explain why L1 does feature selection?\n- [ ] Use the GAME framework for a product metrics question?\n- [ ] Walk through root cause analysis for a dropped metric?\n- [ ] Tell 3 STAR stories (data decision, failure, collaboration) under 2 min each?\n- [ ] Define: ETL, data warehouse vs lake, OLAP vs OLTP, CAP theorem?\n- [ ] Explain why accuracy is bad for imbalanced data and what to use instead?\n- [ ] Write `transform()` vs `agg()` use cases without mixing them up?\n\nIf you can check all of those, you're ready. Go get it. 🔪"
+        }
+      ],
+      "order": 7
+    }
+  ],
+  "source_file": "Module-14-Final-Boss.md"
+}

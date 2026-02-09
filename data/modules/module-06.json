@@ -1,0 +1,106 @@
+{
+  "id": "module-06",
+  "title": "Regularization & Metrics",
+  "number": 6,
+  "subtitle": "Topics: L1/L2 regularization, Classification metrics, A/B testing basics, Python generators, SQL duplicates",
+  "sections": [
+    {
+      "title": "🟠 ML: L1 (Lasso) vs L2 (Ridge) Regularization",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Regularization adds a penalty to the loss function to discourage overly complex models.\n\n**L1 (Lasso):** Penalty = λ × Σ|βᵢ|\n- Drives coefficients to **exactly zero** → built-in feature selection\n- Produces sparse models (few features left)\n- Use when many features are irrelevant\n\n**L2 (Ridge):** Penalty = λ × Σβᵢ²\n- Shrinks coefficients toward zero but **never exactly zero**\n- Keeps all features with smaller weights\n- Use when features are correlated (distributes weight among them)\n\n**Elastic Net** = α×L1 + (1-α)×L2. Best of both worlds."
+        },
+        {
+          "type": "text",
+          "content": "**🚨 THE TRAP QUESTION**\n\n**\"Are L1/L2 applicable to Random Forest?\"**\n\n**Answer: No.** L1/L2 regularize model *coefficients.* Trees have no coefficients — they split on features. Trees regularize via: max_depth, min_samples_leaf, min_samples_split, n_estimators, learning rate (boosting).\n\n**Quick quiz:** You have 500 features but suspect only ~20 matter. L1 or L2?\n\n**Answer:** L1 (Lasso) — it will zero out the ~480 irrelevant features, effectively doing feature selection."
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟠 ML: Classification Metrics — When to Use What",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Confusion matrix:**\n\n|  | Predicted + | Predicted - |\n|---|---|---|\n| Actually + | TP | FN |\n| Actually - | FP | TN |\n\n**Precision** = TP/(TP+FP) — \"Of everything I flagged, how many were correct?\"\n→ Use when **false positives are costly** (spam filter — don't block real emails)\n\n**Recall** = TP/(TP+FN) — \"Of everything actually positive, how many did I catch?\"\n→ Use when **false negatives are costly** (cancer screening — don't miss cancer)\n\n**F1** = 2 × (P×R)/(P+R) — harmonic mean, balances both.\n\n**Accuracy** = (TP+TN)/Total — **NEVER use for imbalanced data** (predicting majority class always = high accuracy but useless)\n\n**ROC-AUC:** Good for comparing models. Can be misleadingly optimistic on imbalanced data.\n**PR-AUC:** Better than ROC-AUC for imbalanced data — focuses on the positive class.\n\n**Quick quiz:** You're building a fraud detection system. What metric do you prioritize and why?\n\n**Answer:** Recall — missing fraud (false negative) is far more costly than investigating a legitimate transaction (false positive). You'd also track precision to ensure you're not overwhelming the fraud team with false alerts."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟢 Stats: A/B Testing Design Checklist",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. **Define hypothesis:** \"Changing X will increase metric Y\"\n2. **Pick metrics:** Primary, secondary, guardrail\n3. **Calculate sample size:** n ≈ 16σ²/δ² (α=0.05, power=0.80, δ = min detectable effect)\n4. **Set duration:** Minimum 2 weeks (capture weekly patterns)\n5. **Randomize:** By user (not session) — hash user ID for consistency\n6. **Analyze at predetermined end date** — don't peek\n7. **Check statistical AND practical significance**\n\n**Quick quiz:** Why randomize by user ID, not by session?\n\n**Answer:** A user might have multiple sessions. If they see version A in one session and B in another, you're contaminating the experiment. Hashing user ID ensures they always see the same version."
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🔶 Python: Generators",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "A generator yields values one at a time instead of storing everything in memory."
+        },
+        {
+          "type": "code",
+          "content": "# List = all in memory at once\nsquares = [x**2 for x in range(10_000_000)]  # ~80MB\n\n# Generator = computes one at a time\nsquares = (x**2 for x in range(10_000_000))  # ~120 bytes",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Custom generator with yield:**"
+        },
+        {
+          "type": "code",
+          "content": "def read_large_file(path):\n    with open(path) as f:\n        for line in f:\n            yield line.strip()  # One line at a time\n\nfor line in read_large_file('huge.csv'):\n    process(line)  # Never loads entire file",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Quick quiz:** What's the difference between `[x for x in range(n)]` and `(x for x in range(n))`?\n\n**Answer:** Square brackets = list comprehension (stores all values, O(n) memory). Parentheses = generator expression (yields one at a time, O(1) memory)."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔷 SQL: Duplicate Detection and the NULL Trap",
+      "category": "sql",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Finding duplicates:**"
+        },
+        {
+          "type": "code",
+          "content": "SELECT email, COUNT(*) AS cnt\nFROM users\nGROUP BY email\nHAVING COUNT(*) > 1;",
+          "language": "sql"
+        },
+        {
+          "type": "text",
+          "content": "**The NULL comparison trap:**\n- `NULL = NULL` → returns NULL (not TRUE!)\n- `NULL != 5` → returns NULL (not TRUE!)\n- Always use `IS NULL` or `IS NOT NULL`\n- `COUNT(column)` ignores NULLs, `COUNT(*)` counts all rows\n- `AVG(column)` ignores NULLs (divides by non-NULL count)\n\n**Quick quiz:** Table has 100 rows. Column `bonus` has 20 NULLs. What does `AVG(bonus)` divide by?\n\n**Answer:** 80 — it ignores the 20 NULL rows. This can be surprising if you expect it to treat NULLs as 0. If you want NULLs as 0: `AVG(COALESCE(bonus, 0))`."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "Module 06 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. L1 vs L2: which one can zero out coefficients?\n2. Can you apply L1/L2 to a Random Forest? Why or why not?\n3. Precision vs recall: which do you prioritize for a cancer screening model?\n4. Why is accuracy misleading for imbalanced data?\n5. In an A/B test, why not check results every day?\n6. `NULL = NULL` returns what?\n7. What's a generator and when would you use one?\n\n**Answers:**\n1. L1 (Lasso) — its absolute value penalty can drive coefficients to exactly zero.\n2. No — L1/L2 regularize coefficients. Trees have no coefficients. Trees use max_depth, min_samples_leaf, etc.\n3. Recall — missing cancer (false negative) is far worse than a false alarm (false positive).\n4. A model predicting only the majority class gets high accuracy while catching zero minority cases. 99% accuracy on 99/1 split = useless.\n5. Peeking inflates false positive rates — a test designed for α=0.05 can have 20-30% actual error rates with repeated peeking. Pre-commit to end date or use sequential methods.\n6. NULL (not TRUE). Use `IS NULL` for NULL comparison.\n7. A function/expression that yields values lazily one at a time. Use for large datasets that don't fit in memory."
+        }
+      ],
+      "order": 5
+    }
+  ],
+  "source_file": "Module-06-Regularization-Metrics.md"
+}

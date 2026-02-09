@@ -1,0 +1,126 @@
+{
+  "id": "module-07",
+  "title": "A/B Testing Deep Dive",
+  "number": 7,
+  "subtitle": "Topics: A/B testing pitfalls, Root cause analysis, Logistic regression, Python missing data, Behavioral \"failure\" story",
+  "sections": [
+    {
+      "title": "🟢 Stats: A/B Testing Pitfalls (Interviewers Love These)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**Peeking — The #1 Pitfall**\nChecking results daily and stopping when you see significance. A test designed for α=0.05 can have **20-30% actual false positive rates** with repeated peeking.\n\n**Fix:** Pre-commit to a sample size and duration. Or use sequential testing methods (e.g., always-valid p-values)."
+        },
+        {
+          "type": "text",
+          "content": "**Multiple Testing**\nTesting 20 metrics at α=0.05? Expect 1 false positive by pure chance.\n\n**Fix:** Bonferroni correction (use α/k for k tests), or designate ONE primary metric beforehand."
+        },
+        {
+          "type": "text",
+          "content": "**Novelty Effect**\nUsers engage more with something just because it's new, not because it's better.\n\n**Fix:** Run long enough for novelty to wear off (typically 2-4 weeks)."
+        },
+        {
+          "type": "text",
+          "content": "**Simpson's Paradox**\nAggregate results can show the OPPOSITE of segment-level results.\n\n**Example:** Treatment looks worse overall, but better in EVERY demographic — because the treatment group had proportionally more users from a harder-to-convert segment.\n\n**Fix:** Always check segment-level results."
+        },
+        {
+          "type": "text",
+          "content": "**Network Effects**\nOn social platforms, treated and control users interact, contaminating results.\n\n**Fix:** Cluster randomization (by geography, social graph, or time).\n\n**Quick quiz:** You run an A/B test for 3 days, see p=0.02, and your PM wants to ship immediately. What do you say?\n\n**Answer:** \"We should wait. Three days isn't enough to capture weekly patterns (weekday vs weekend behavior differs). Also, early significance with a small sample is unreliable — the effect size estimate is noisy and may shrink. Let's run to our pre-committed duration.\""
+        }
+      ],
+      "order": 0
+    },
+    {
+      "title": "🟢 Stats: CUPED (Advanced — 2024-25 Interview Trend)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**What it is:** Controlled-experiment Using Pre-Existing Data. Reduces variance by adjusting for pre-experiment behavior.\n\n**The intuition:** If a user was already high-spending BEFORE the experiment, their high spending DURING the experiment isn't due to the treatment. CUPED subtracts this pre-experiment baseline, reducing noise and letting you detect smaller effects with the same sample size.\n\n**Where it's used:** Meta, Netflix, Microsoft, Uber — almost every major tech company.\n\n**Why interviewers ask:** It shows you understand that A/B testing isn't just \"compare two means.\" It's about reducing variance to make better decisions faster."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "title": "🟠 Product Sense: Root Cause Analysis",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "When an interviewer says \"Metric X dropped Y%,\" use this structure:\n\n1. **Clarify:** What exactly is the metric? How is it calculated? What timeframe?\n2. **Decompose:** Revenue = Users × Conversion × AOV. Which piece dropped?\n3. **Internal first:** Recent deployments? Bugs? Logging changes? A/B tests?\n4. **External:** Seasonality? Competitor actions? Market events?\n5. **Segment:** All users or specific group? All platforms? All regions?\n6. **Classify and recommend:** Name the likely cause, suggest next steps.\n\n**Practice:** \"DAU dropped 8% this week.\" Walk through the framework in your head before reading.\n\n**Example answer:** \"First, is this vs last week or vs same week last year? Is it all platforms? I'd decompose into new user signups vs returning user logins. Check: any recent app updates or outages? Any logging changes that might be measurement artifacts? External: is there a holiday, competitor launch, or app store ranking change? I'd segment by platform (iOS/Android), geography, and acquisition channel to isolate where the drop is concentrated.\""
+        }
+      ],
+      "order": 2
+    },
+    {
+      "title": "🟠 ML: Logistic Regression — Classification, Not Regression",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "**How it works:** Takes linear combination z = β₀ + β₁x₁ + ... and passes it through the **sigmoid function:**"
+        },
+        {
+          "type": "code",
+          "content": "P(Y=1) = 1 / (1 + e^(-z))"
+        },
+        {
+          "type": "text",
+          "content": "Sigmoid squashes any real number to (0, 1) → interpreted as probability.\n\n**Interpreting coefficients:** A one-unit increase in xᵢ multiplies the **odds** by e^βᵢ. If β = 0.7, odds multiply by e^0.7 ≈ 2.01 → odds roughly double.\n\n**Q: \"Why not use linear regression for classification?\"**\nA: Linear regression can predict values outside [0,1], which don't work as probabilities. It also minimizes squared error, which isn't the right objective for classification. Logistic regression constrains output to [0,1] and uses log loss (binary cross-entropy)."
+        }
+      ],
+      "order": 3
+    },
+    {
+      "title": "🔶 Python: Handling Missing Data",
+      "category": "python",
+      "blocks": [
+        {
+          "type": "code",
+          "content": "# Detect\ndf.isnull().sum()                     # NaN count per column\ndf.isnull().mean()                    # Fraction missing per column\n\n# Remove\ndf.dropna()                           # Drop ANY row with NaN\ndf.dropna(subset=['critical_col'])    # Only if specific column is NaN\n\n# Fill\ndf['col'].fillna(0)                   # Constant\ndf['col'].fillna(df['col'].mean())    # Column mean\ndf['col'].fillna(method='ffill')      # Forward fill (last known value)",
+          "language": "python"
+        },
+        {
+          "type": "text",
+          "content": "**Interview question:** \"When would you drop NaN vs fill it?\"\n\n**Answer:** Drop when: missingness is random AND few rows affected (<5%). Fill when: data is valuable, missingness has a pattern (time series → ffill), or the column is critical. NEVER blindly fill with mean — check if the missingness is informative (e.g., income=NaN might mean \"refused to answer,\" which IS information)."
+        }
+      ],
+      "order": 4
+    },
+    {
+      "title": "🟠 Behavioral: The \"Failure\" Story",
+      "category": "ml",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Every company asks this. The secret: **they're testing self-awareness, not perfection.**\n\n**Template:**\n- **S/T:** \"I was tasked with [X] under [constraints].\"\n- **A:** \"I chose [approach] because [reasoning]. It didn't work because [specific issue — own it].\"\n- **A (continued):** \"I then pivoted to [better approach].\"\n- **R:** \"The outcome was [result]. The lesson I took away was [specific takeaway I still apply today].\"\n\n**Rules:**\n- Take ownership — never blame the data, the team, or the timeline\n- Show learning, not just failure\n- Pick something real but not catastrophic\n- End on what you do differently NOW because of it\n\n**Practice saying yours out loud. Time it — under 2 minutes.**"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "title": "🟢 Repeat: Bias-Variance (Can You Still Explain It?)",
+      "category": "stats",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "Without looking at Module 05, answer:\n\n1. What are the two components of reducible error?\n2. Which one means \"too simple\"?\n3. Which one means \"memorized noise\"?\n4. Your model: 98% train accuracy, 65% test accuracy. What's wrong?\n\n**Answers:**\n1. Bias and variance.\n2. High bias = too simple (underfitting).\n3. High variance = memorized noise (overfitting).\n4. Overfitting — massive gap between train and test. Regularize, get more data, or simplify model."
+        }
+      ],
+      "order": 6
+    },
+    {
+      "title": "Module 07 Self-Test",
+      "category": "review",
+      "blocks": [
+        {
+          "type": "text",
+          "content": "1. Name 3 A/B testing pitfalls and the fix for each.\n2. What is CUPED and why does it help?\n3. \"DAU dropped 10%.\" What's your first question?\n4. What does the sigmoid function do in logistic regression?\n5. When should you drop NaN vs fill it?\n6. Tell your \"failure\" STAR story in under 2 minutes. (Actually do this out loud.)\n\n**Answers:**\n1. Peeking (pre-commit to end date), multiple testing (Bonferroni correction or single primary metric), novelty effect (run longer). Also: Simpson's paradox (check segments), network effects (cluster randomization).\n2. Reduces variance by adjusting for pre-experiment behavior, letting you detect smaller effects with the same sample size.\n3. \"Is this compared to last week or same week last year? Is it all platforms/regions, or concentrated somewhere?\" — clarify before decomposing.\n4. Squashes any real number to (0,1), making the output interpretable as a probability.\n5. Drop if random + few rows. Fill if data is valuable, but check whether missingness itself is informative.\n6. (Self-grade: Did you use \"I\"? Quantify? Show learning? Under 2 min?)"
+        }
+      ],
+      "order": 7
+    }
+  ],
+  "source_file": "Module-07-AB-Testing-Deep.md"
+}
