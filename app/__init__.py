@@ -60,11 +60,13 @@ def create_app():
     from app.routes.quiz import quiz_bp
     from app.routes.progress import progress_bp
     from app.routes.admin import admin_bp
+    from app.routes.practice import practice_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(study_bp)
     app.register_blueprint(quiz_bp)
     app.register_blueprint(progress_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(practice_bp)
 
     return app

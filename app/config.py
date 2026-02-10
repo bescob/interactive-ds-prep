@@ -5,6 +5,7 @@ MODULES_DIR = os.path.join(BASE_DIR, 'modules')
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 DATA_MODULES_DIR = os.path.join(DATA_DIR, 'modules')
 DATA_QUESTIONS_DIR = os.path.join(DATA_DIR, 'questions')
+DATA_CHALLENGES_DIR = os.path.join(DATA_DIR, 'challenges')
 PROGRESS_FILE = os.path.join(DATA_DIR, 'progress.json')
 
 CATEGORY_COLORS = {

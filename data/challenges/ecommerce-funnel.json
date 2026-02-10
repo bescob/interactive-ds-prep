@@ -1,0 +1,33 @@
+{
+  "id": "ecommerce-funnel",
+  "title": "E-commerce Conversion Funnel Analysis",
+  "category": "sql",
+  "difficulty": "intermediate",
+  "scenario": "You're analyzing user behavior for an e-commerce platform. The company wants to understand how users move through the purchase funnel: browsing pages, viewing products, adding items to cart, and completing purchases. You have access to page view logs and purchase records for January 2024.",
+  "sql_setup": "CREATE TABLE page_views (\n  view_id INTEGER PRIMARY KEY,\n  user_id INTEGER NOT NULL,\n  page_type TEXT NOT NULL,\n  view_timestamp TEXT NOT NULL\n);\n\nCREATE TABLE purchases (\n  purchase_id INTEGER PRIMARY KEY,\n  user_id INTEGER NOT NULL,\n  amount REAL NOT NULL,\n  purchase_timestamp TEXT NOT NULL\n);\n\nINSERT INTO page_views (view_id, user_id, page_type, view_timestamp) VALUES\n  (1, 101, 'home', '2024-01-05 10:00:00'),\n  (2, 101, 'product', '2024-01-05 10:05:00'),\n  (3, 101, 'cart', '2024-01-05 10:10:00'),\n  (4, 102, 'home', '2024-01-05 11:00:00'),\n  (5, 102, 'product', '2024-01-05 11:15:00'),\n  (6, 103, 'home', '2024-01-05 12:00:00'),\n  (7, 201, 'home', '2024-01-06 09:00:00'),\n  (8, 201, 'product', '2024-01-06 09:10:00'),\n  (9, 201, 'cart', '2024-01-06 09:20:00');\n\nINSERT INTO purchases (purchase_id, user_id, amount, purchase_timestamp) VALUES\n  (1, 101, 59.99, '2024-01-05 10:15:00'),\n  (2, 201, 129.99, '2024-01-06 09:30:00');",
+  "prompt": "Write a query to calculate daily funnel metrics for January 2024. For each day, show:\n- Total unique viewers (any page)\n- Users who viewed a product page\n- Users who viewed their cart\n- Users who completed a purchase\n- Overall conversion rate (purchasers / total viewers, rounded to 2 decimal places)\n\nOrder results by date.",
+  "answer": "WITH daily_page_activity AS (\n  SELECT\n    DATE_TRUNC('day', view_timestamp) AS date,\n    user_id,\n    MAX(CASE WHEN page_type = 'product' THEN 1 ELSE 0 END) AS viewed_product,\n    MAX(CASE WHEN page_type = 'cart' THEN 1 ELSE 0 END) AS viewed_cart\n  FROM page_views\n  WHERE view_timestamp BETWEEN '2024-01-01' AND '2024-01-31'\n  GROUP BY DATE_TRUNC('day', view_timestamp), user_id\n),\ndaily_purchases AS (\n  SELECT\n    DATE_TRUNC('day', purchase_timestamp) AS date,\n    user_id\n  FROM purchases\n  WHERE purchase_timestamp BETWEEN '2024-01-01' AND '2024-01-31'\n  GROUP BY DATE_TRUNC('day', purchase_timestamp), user_id\n)\nSELECT\n  p.date,\n  COUNT(DISTINCT p.user_id) AS total_viewers,\n  SUM(p.viewed_product) AS product_viewers,\n  SUM(p.viewed_cart) AS cart_users,\n  COUNT(DISTINCT pur.user_id) AS purchasers,\n  ROUND(1.0 * COUNT(DISTINCT pur.user_id) / COUNT(DISTINCT p.user_id), 2) AS conversion_rate\nFROM daily_page_activity p\nLEFT JOIN daily_purchases pur\n  ON p.date = pur.date AND p.user_id = pur.user_id\nGROUP BY p.date\nORDER BY p.date;",
+  "sql_answer": "WITH daily_page_activity AS (\n  SELECT\n    date(view_timestamp) AS day,\n    user_id,\n    MAX(CASE WHEN page_type = 'product' THEN 1 ELSE 0 END) AS viewed_product,\n    MAX(CASE WHEN page_type = 'cart' THEN 1 ELSE 0 END) AS viewed_cart\n  FROM page_views\n  WHERE view_timestamp >= '2024-01-01' AND view_timestamp < '2024-02-01'\n  GROUP BY date(view_timestamp), user_id\n),\ndaily_purchases AS (\n  SELECT\n    date(purchase_timestamp) AS day,\n    user_id\n  FROM purchases\n  WHERE purchase_timestamp >= '2024-01-01' AND purchase_timestamp < '2024-02-01'\n  GROUP BY date(purchase_timestamp), user_id\n)\nSELECT\n  p.day AS date,\n  COUNT(DISTINCT p.user_id) AS total_viewers,\n  SUM(p.viewed_product) AS product_viewers,\n  SUM(p.viewed_cart) AS cart_users,\n  COUNT(DISTINCT pur.user_id) AS purchasers,\n  ROUND(1.0 * COUNT(DISTINCT pur.user_id) / COUNT(DISTINCT p.user_id), 2) AS conversion_rate\nFROM daily_page_activity p\nLEFT JOIN daily_purchases pur\n  ON p.day = pur.day AND p.user_id = pur.user_id\nGROUP BY p.day\nORDER BY p.day;",
+  "alternate_answers": [
+    "SELECT\n  date(pv.view_timestamp) AS date,\n  COUNT(DISTINCT pv.user_id) AS total_viewers,\n  COUNT(DISTINCT CASE WHEN pv.page_type = 'product' THEN pv.user_id END) AS product_viewers,\n  COUNT(DISTINCT CASE WHEN pv.page_type = 'cart' THEN pv.user_id END) AS cart_users,\n  COUNT(DISTINCT pu.user_id) AS purchasers,\n  ROUND(1.0 * COUNT(DISTINCT pu.user_id) / COUNT(DISTINCT pv.user_id), 2) AS conversion_rate\nFROM page_views pv\nLEFT JOIN purchases pu\n  ON date(pv.view_timestamp) = date(pu.purchase_timestamp)\n  AND pv.user_id = pu.user_id\nWHERE pv.view_timestamp >= '2024-01-01' AND pv.view_timestamp < '2024-02-01'\nGROUP BY date(pv.view_timestamp)\nORDER BY date;"
+  ],
+  "expected_columns": ["date", "total_viewers", "product_viewers", "cart_users", "purchasers", "conversion_rate"],
+  "expected_rows": [
+    ["2024-01-05", 3, 2, 1, 1, 0.33],
+    ["2024-01-06", 1, 1, 1, 1, 1.0]
+  ],
+  "concepts": [
+    "Conditional aggregation",
+    "LEFT JOIN",
+    "Date filtering",
+    "CTE pattern",
+    "COUNT DISTINCT"
+  ],
+  "rubric": [
+    "Uses CTE or subquery for clean structure",
+    "LEFT JOIN to keep non-purchasers",
+    "COUNT(DISTINCT) for unique users",
+    "Proper date filtering",
+    "Decimal division for conversion rate"
+  ]
+}
